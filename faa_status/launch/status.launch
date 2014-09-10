@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="faa_status" type="status.py" name="faa_status" />
+</launch>

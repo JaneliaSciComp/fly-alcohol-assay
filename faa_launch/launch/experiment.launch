@@ -1,0 +1,24 @@
+<launch>
+    <include file="$(find faa_camera)/launch/camera.launch" />
+    <arg name="reusing_bg_images" default="false"/>
+    <include file="$(find faa_image_processing)/launch/image_processing.launch" >
+      <arg name="reusing_bg_images" value="$(arg reusing_bg_images)"/>
+    </include>
+    <!-- <node pkg="image_view" type="image_view" name="image_view" > -->
+    <!--   <remap from="image" to="/camera/image_processed" /> -->
+    <!-- </node> -->
+    <arg name="hardware" default="true"/>
+    <include file="$(find faa_actuation)/launch/actuation.launch" >
+      <arg name="hardware" value="$(arg hardware)"/>
+    </include>
+    <include file="$(find faa_web_apps)/launch/experiment.launch" />
+    <include file="$(find faa_actionlib)/launch/actionlib.launch" >
+      <arg name="reusing_bg_images" value="$(arg reusing_bg_images)"/>
+    </include>
+    <include file="$(find faa_smach)/launch/smach.launch" />
+    <!-- <node pkg="smach_viewer" type="smach_viewer.py" name="smach_viewer" /> -->
+    <!-- <node pkg="rqt_console" type="rqt_console" name="rqt_console" /> -->
+    <include file="$(find faa_tracking_processing)/launch/tracking_processing.launch" />
+    <include file="$(find faa_status)/launch/status.launch" />
+    <include file="$(find faa_data_save)/launch/data_save.launch" />
+</launch>

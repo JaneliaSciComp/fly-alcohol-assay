@@ -1,0 +1,15 @@
+<launch>
+    <include file="$(find faa_camera)/launch/camera.launch" />
+    <include file="$(find faa_image_processing)/launch/image_processing.launch" />
+    <node pkg="image_view" type="image_view" name="image_view" >
+      <remap from="image" to="/camera/image_processed" />
+    </node>
+    <arg name="hardware" default="true"/>
+    <include file="$(find faa_actuation)/launch/actuation.launch" >
+      <arg name="hardware" value="$(arg hardware)"/>
+    </include>
+    <include file="$(find faa_web_apps)/launch/manual.launch" />
+    <include file="$(find faa_actionlib)/launch/actionlib.launch" />
+    <include file="$(find faa_smach)/launch/smach.launch" />
+    <!-- <node pkg="smach_viewer" type="smach_viewer.py" name="smach_viewer" /> -->
+</launch>

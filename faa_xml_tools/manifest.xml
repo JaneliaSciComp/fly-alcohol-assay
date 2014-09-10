@@ -1,0 +1,22 @@
+<package>
+  <description brief="faa_xml_tools">
+
+     faa_xml_tools
+
+  </description>
+  <author>Peter Polidoro</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/peterpolidoro/faa</url>
+  <depend package="rospy"/>
+  <depend package="faa_introspection"/>
+  <depend package="faa_utilities"/>
+  <depend package="faa_actuation"/>
+
+  <!-- <rosdep name="virtualenv"/> -->
+  <!-- <rosdep name="pip" /> -->
+  <!-- <rosdep name="jinja2" /> -->
+
+</package>
+
+

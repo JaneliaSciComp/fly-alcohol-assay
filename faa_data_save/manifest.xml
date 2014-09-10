@@ -1,0 +1,17 @@
+<package>
+  <description brief="faa_data_save">
+
+     faa_data_save
+
+  </description>
+  <author>Peter Polidoro</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/peterpolidoro/faa</url>
+  <depend package="rospy"/>
+  <depend package="faa_image_processing"/>
+  <depend package="faa_utilities"/>
+  <depend package="faa_status"/>
+</package>
+
+

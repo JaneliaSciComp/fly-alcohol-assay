@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="mjpeg_server" type="mjpeg_server" name="mjpeg_server" />
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
+    <node pkg="faa_web_apps" type="calibrate.py" name="faa_calibrate" />
+    <include file="$(find faa_utilities)/launch/utilities.launch" />
+</launch>

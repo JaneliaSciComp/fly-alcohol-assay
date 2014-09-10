@@ -1,0 +1,6 @@
+<launch>
+  <arg name="hardware" default="true"/>
+  <node ns="faa_actuation" pkg="faa_actuation" type="actuation_server.py" name="faa_actuation" >
+    <param name="hardware" value="$(arg hardware)"/>
+  </node>
+</launch>

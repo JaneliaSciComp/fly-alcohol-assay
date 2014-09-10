@@ -1,0 +1,23 @@
+<package>
+  <description brief="faa_avi_writer">
+
+      faa_avi_writer
+
+  </description>
+  <author>Peter Polidoro</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/peterpolidoro/faa</url>
+  <depend package="rospy"/>
+  <depend package="opencv2"/>
+  <depend package="cv_bridge"/>
+  <depend package="sensor_msgs"/>
+  <depend package="faa_msg_and_srv"/>
+  <depend package="faa_utilities" />
+  <depend package="faa_xml_tools" />
+  <depend package="faa_introspection"/>
+  <rosped name="ros_vision_opencv"/>
+
+</package>
+
+

@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="mjpeg_server" type="mjpeg_server" name="mjpeg_server" />
+    <node pkg="faa_web_apps" type="view_images.py" name="faa_view_images" />
+</launch>

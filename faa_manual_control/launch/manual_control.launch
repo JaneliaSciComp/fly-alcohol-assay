@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="faa_manual_control" type="manual_control.py" name="faa_manual_control" />
+</launch>

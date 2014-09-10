@@ -1,0 +1,87 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+html, body {
+    margin:0;
+    padding:0;
+    height:100%;
+    border:none;
+}
+#window {
+    background-color: rgb(255,0,0);
+    height: 100%;
+}
+#tabs {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+#tblStates {
+    width: 100%;
+    height: 100%;
+}
+td {
+    padding: 0 0.5em;
+    text-align: center;
+}
+th {
+    color: #000000;
+    font-size:2em;
+    font-weight:bold;
+}
+.button {
+    width: 100%;
+    height: 100%;
+    font-size:2em;
+    font-weight:bold;
+}
+.display {
+    color:#000000;
+    font-size:1em;
+    font-weight:bold;
+}
+.settings {
+    padding: 0.5em;
+}
+.ui-button-text-only {
+    padding: 0.1em 0.2em !important;
+}
+.mfc.slider {
+    max-width: 20em;
+}
+#tblInfo {
+    width: 100%;
+}
+.colInfo {
+    text-align: left;
+    width: 33%;
+}
+.ethanolChamber.slider {
+    max-width: 50em;
+}
+.ethanolChamberSettings, .acclimationSettings {
+    padding: 1em;
+}
+#acclimationSlider {
+    max-width: 50em;
+}
+.info {
+    font-weight: bolder;
+}
+#tblImageProcessing {
+    width: 100%;
+}
+#btnInfo {
+    max-height: 4em;
+}
+#btnSaveFlowRates {
+    max-height: 4em;
+}
+#btnSaveExperimentParameters {
+    max-height: 4em;
+}
+#btnSetExperimentName {
+    max-height: 4em;
+    max-width: 4em;
+}

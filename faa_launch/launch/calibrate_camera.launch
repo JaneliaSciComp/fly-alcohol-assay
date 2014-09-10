@@ -1,0 +1,8 @@
+<launch>
+    <include file="$(find faa_camera)/launch/camera.launch" />
+    <node pkg="camera_calibration" type="cameracalibrator.py" 
+          args="--size=8x6 --square=0.010"
+          name="calibration_gui" output="screen">
+      <remap from="image" to="/camera/image_raw" />
+    </node>
+</launch>

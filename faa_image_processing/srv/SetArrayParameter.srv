@@ -1,0 +1,4 @@
+string name
+int64[] array
+---
+string status

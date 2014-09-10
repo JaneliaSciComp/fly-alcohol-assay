@@ -1,0 +1,4 @@
+string value_name
+uint8 value_amount
+---
+string status

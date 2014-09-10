@@ -1,0 +1,17 @@
+<package>
+  <description brief="faa_introspection">
+
+     faa_introspection
+
+  </description>
+  <author>Peter Polidoro</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/peterpolidoro/faa</url>
+  <depend package="rospy"/>
+  <depend package="faa_msg_and_srv"/>
+  <depend package="faa_utilities"/>
+
+</package>
+
+

@@ -1,0 +1,7 @@
+<launch>
+  <rosparam ns="faa_image_processing" file="$(env FAA_CONFIG)/faa_image_processing/params.yaml"/>
+  <arg name="reusing_bg_images" default="false"/>
+  <node ns="camera" pkg="faa_image_processing" type="image_processing.py" name="faa_image_processing" >
+    <param name="reusing_bg_images" value="$(arg reusing_bg_images)"/>
+  </node>
+</launch>

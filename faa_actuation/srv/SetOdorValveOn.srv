@@ -1,0 +1,4 @@
+int8 device
+int8 valve
+---
+string status

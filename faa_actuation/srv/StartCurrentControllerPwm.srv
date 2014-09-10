@@ -1,0 +1,5 @@
+uint8 percent_capacity
+uint32 duration_on
+uint32 duration_off
+---
+string status

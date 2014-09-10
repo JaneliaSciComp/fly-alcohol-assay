@@ -1,0 +1,17 @@
+<package>
+  <description brief="faa_computer_admin">
+
+     faa_computer_admin
+
+  </description>
+  <author>Peter Polidoro</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/peterpolidoro/faa</url>
+  <depend package="rospy"/>
+  <depend package="faa_utilities"/>
+  <depend package="faa_data_processing"/>
+
+</package>
+
+

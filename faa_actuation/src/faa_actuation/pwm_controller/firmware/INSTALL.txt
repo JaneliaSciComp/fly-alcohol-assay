@@ -1,0 +1,16 @@
+Firmware installation instructions
+-----------------------------------
+
+Requirements:
+
+The following libraries should be placed in the arduino sketchbook libraries 
+directory.
+
+* Streaming         http://arduiniana.org/libraries/streaming/
+* TimerOne          http://www.arduino.cc/playground/code/timer1
+* SerialReceiver    https://bitbucket.org/iorodeo/iorodeo_arduino_libs/src 
+* DictPrinter       https://bitbucket.org/iorodeo/iorodeo_arduino_libs/src 
+
+Build on upload the firmware using the Arduino IDE.
+
+see http://arduino.cc/en/Guide/Environment for instructions on using the IDE.

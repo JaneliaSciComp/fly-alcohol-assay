@@ -1,0 +1,3 @@
+int64 frame_count
+float64 progress_t
+string recording_message

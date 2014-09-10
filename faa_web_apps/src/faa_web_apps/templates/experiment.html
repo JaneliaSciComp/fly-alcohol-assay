@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fly Alcohol Assay</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <link rel="stylesheet" href="static/jquery-ui-1.9.2.custom.min.css?v=2" type="text/css" />
+    <link rel="stylesheet" href="static/experiment.css?v=6" type="text/css" />
+    <script type="text/javascript" src="/static/js/ros/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="/static/js/ros/roslib.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="/static/js/extras/prettyprint.js"></script>
+  </head>
+  
+  <body>
+    <div id="window" >
+      <div id="tabs" >
+        <ul>
+          <li><a href="#tab-hardware-info">Hardware Info</a></li>
+          <li><a href="#tab-save-background-images">Save Background Images</a></li>
+          <li><a href="#tab-image-processing-settings">Image Processing Settings</a></li>
+          <li><a href="#tab-flow-rate-settings">Flow Rate Settings</a></li>
+          <li><a href="#tab-experiment-settings">Experiment Settings</a></li>
+          <li><a href="#tab-experiment-controls">Experiment Controls</a></li>
+        </ul>
+        <div id="tab-hardware-info" >
+          <button class="button" id="btnInfo">Get Hardware Info</button>
+          <table id="tblInfo">
+            <tr class="rowInfo">
+              <td class="colInfo"><div class="info" id="infoDevice0"></div></td>
+              <td class="colInfo"><div class="info" id="infoDevice1"></div></td>
+              <td class="colInfo"><div class="info" id="infoDevice2"></div></td>
+            </tr>
+            <tr class="rowInfo">
+              <td class="colInfo"></td>
+              <td class="colInfo"><div class="info" id="infoDevice3"></div></td>
+              <td class="colInfo"></td>
+            </tr>
+          </table>
+        </div>
+        <div id="tab-save-background-images" >
+          <div class="center" id="saveBackgroundImagesInstructions">
+          </div>
+          <div class="center">
+            <button class="button" id="btnSaveBackgroundImages">Save Background Images</button>
+          </div>
+          <div class="center" id="mjpegSaveBackgroundImages">
+            <img src="http://localhost:8080/stream?topic=/camera/image_processed" />
+          </div>
+        </div>
+        <div id="tab-image-processing-settings" >
+          <table id="tblImageProcessing">
+            <tr>
+              <td>
+                <span>Image Size: </span><span id="imageSizeDisplay"></span>
+              </td>
+              <td>
+                <span>Line Thickness: </span><span id="lineThicknessDisplay"></span>
+              </td>
+              <td>
+                <span>Tunnel Width: </span><span id="tunnelWidthDisplay"></span>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="slider image_processing" id="imageSizeSlider"></div>
+              </td>
+              <td>
+                <div class="slider image_processing" id="lineThicknessSlider"></div>
+              </td>
+              <td>
+                <div class="slider image_processing" id="tunnelWidthSlider"></div>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>Tunnel Height: </span><span id="tunnelHeightDisplay"></span>
+              </td>
+              <td>
+                <span>Tunnel Y Offset: </span><span id="tunnelYOffsetDisplay"></span>
+              </td>
+              <td>
+                <span>Gate Height: </span><span id="gateHeightDisplay"></span>
+              </td>
+              <td>
+                <span>Gate Y Offset 0: </span><span id="gateYOffsetDisplay0"></span>
+              </td>
+              <td>
+                <span>Gate Y Offset 1: </span><span id="gateYOffsetDisplay1"></span>
+              </td>
+              <td>
+                <span>Gate Y Offset 2: </span><span id="gateYOffsetDisplay2"></span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="slider image_processing" id="tunnelHeightSlider"></div>
+              </td>
+              <td>
+                <div class="slider image_processing" id="tunnelYOffsetSlider"></div>
+              </td>
+              <td>
+                <div class="slider image_processing" id="gateHeightSlider"></div>
+              </td>
+              <td>
+                <div class="slider image_processing yOffset" id="gateYOffsetSlider0" data-gate="0"></div>
+              </td>
+              <td>
+                <div class="slider image_processing yOffset" id="gateYOffsetSlider1" data-gate="1"></div>
+              </td>
+              <td>
+                <div class="slider image_processing yOffset" id="gateYOffsetSlider2" data-gate="2"></div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>Tunnel X Offset 0: </span><span id="tunnelXOffsetDisplay0"></span>
+              </td>
+              <td>
+                <span>Tunnel X Offset 1: </span><span id="tunnelXOffsetDisplay1"></span>
+              </td>
+              <td>
+                <span>Tunnel X Offset 2: </span><span id="tunnelXOffsetDisplay2"></span>
+              </td>
+              <td>
+                <span>Tunnel X Offset 3: </span><span id="tunnelXOffsetDisplay3"></span>
+              </td>
+              <td>
+                <span>Tunnel X Offset 4: </span><span id="tunnelXOffsetDisplay4"></span>
+              </td>
+              <td>
+                <span>Tunnel X Offset 5: </span><span id="tunnelXOffsetDisplay5"></span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="slider image_processing xOffset" id="tunnelXOffsetSlider0" data-tunnel="0"></div>
+              </td>
+              <td>
+                <div class="slider image_processing xOffset" id="tunnelXOffsetSlider1" data-tunnel="1"></div>
+              </td>
+              <td>
+                <div class="slider image_processing xOffset" id="tunnelXOffsetSlider2" data-tunnel="2"></div>
+              </td>
+              <td>
+                <div class="slider image_processing xOffset" id="tunnelXOffsetSlider3" data-tunnel="3"></div>
+              </td>
+              <td>
+                <div class="slider image_processing xOffset" id="tunnelXOffsetSlider4" data-tunnel="4"></div>
+              </td>
+              <td>
+                <div class="slider image_processing xOffset" id="tunnelXOffsetSlider5" data-tunnel="5"></div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="6">
+                <div id="mjpegSettings">
+                  <img src="http://localhost:8080/stream?topic=/camera/image_processed" />
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div id="tab-flow-rate-settings" >
+          <div id="odor0FlowRateSettings" class="settings">
+            <p>
+              <h1>Odor 1</h1>
+              <label for="odor0Mfc0Display">MFC 1 Percent Capacity Setting:</label>
+              <span class="mfc display" id="odor0Mfc0Display"></span>
+              <div class="mfc slider" id="odor0Mfc0Slider"></div>
+              <label for="odor0Mfc1Display">MFC 2 Percent Capacity Setting:</label>
+              <span class="mfc display" id="odor0Mfc1Display"></span>
+              <div class="mfc slider" id="odor0Mfc1Slider"></div>
+            </p>
+          </div>
+          <div id="odor1FlowRateSettings" class="settings">
+            <p>
+              <h1>Odor 2</h1>
+              <label for="odor1Mfc0Display">MFC 1 Percent Capacity Setting:</label>
+              <span class="mfc display" id="odor1Mfc0Display"></span>
+              <div class="mfc slider" id="odor1Mfc0Slider"></div>
+              <label for="odor1Mfc1Display">MFC 2 Percent Capacity Setting:</label>
+              <span class="mfc display" id="odor1Mfc1Display"></span>
+              <div class="mfc slider" id="odor1Mfc1Slider"></div>
+            </p>
+          </div>
+          <div id="ethanolFlowRateSettings" class="settings">
+            <p>
+              <h1>Ethanol</h1>
+              <label for="ethanolMfc0Display">MFC 1 Percent Capacity Setting:</label>
+              <span class="mfc display" id="ethanolMfc0Display"></span>
+              <div class="mfc slider" id="ethanolMfc0Slider"></div>
+              <label for="ethanolMfc1Display">MFC 2 Percent Capacity Setting:</label>
+              <span class="mfc display" id="ethanolMfc1Display"></span>
+              <div class="mfc slider" id="ethanolMfc1Slider"></div>
+            </p>
+          </div>
+        </div>
+        <div id="tab-experiment-settings" >
+          <div id="experimentSettings">
+            <div class="settings">
+              <h1>Experiment Name</h1>
+              <div class="acclimationSettings indent">
+                <input type="text" id="experimentName">
+                <button class="button" id="btnSetExperimentName">Set</button>
+                <span class="display" id="experimentNameDisplay"></span>
+              </div>
+            </div>
+            <div class="settings">
+              <h1>Number of Trials</h1>
+              <div class="trialCountSettings indent">
+                <span class="trial display" id="trialCountDisplay"></span>
+                <div class="trial slider experimentSetting" id="trialCountSlider"></div>
+              </div>
+            </div>
+            <div class="settings">
+              <h1>Acclimation Duration</h1>
+              <div class="acclimationSettings indent">
+                <span class="acclimation display" id="acclimationDisplay"></span>
+                <div class="acclimation slider experimentSetting" id="acclimationSlider"></div>
+              </div>
+            </div>
+            <div class="settings">
+              <h1>Start Chamber Duration</h1>
+              <div class="startChamberSettings indent">
+                <span class="start display" id="startChamberDurationDisplay"></span>
+                <div class="start slider experimentSetting" id="startChamberDurationSlider"></div>
+              </div>
+            </div>
+            <div class="settings">
+              <h1>Timeout Duration</h1>
+              <div class="timeoutSettings indent">
+                <span class="timeout display" id="timeoutDisplay"></span>
+                <div class="timeout slider experimentSetting" id="timeoutSlider"></div>
+              </div>
+            </div>
+            <div class="settings">
+              <h1>End Chamber Settings</h1>
+              <div id="endChamberAirBefore" class="indent">
+                <h2>Air Before</h2>
+                <div class="endChamberSettings indent">
+                  <span class="endChamber display" id="endChamberDisplayAirBefore"></span>
+                  <div class="endChamber slider experimentSetting" id="endChamberSliderAirBefore"></div>
+                </div>
+              </div>
+              <div id="endChamberEthanol" class="indent">
+                <h2>Ethanol</h2>
+                <div class="endChamberSettings indent">
+                  <div id="ethanolVialSelection">
+                    <input type="radio" id="ethanolVial0" name="vialEthanol" value="0" /><label for="ethanolVial0">Vial 0 (Dummy)</label>
+                    <input type="radio" id="ethanolVial1" name="vialEthanol" value="1" checked="checked" /><label for="ethanolVial1">Vial 1</label>
+                    <input type="radio" id="ethanolVial2" name="vialEthanol" value="2" /><label for="ethanolVial2">Vial 2</label>
+                    <input type="radio" id="ethanolVial3" name="vialEthanol" value="3" /><label for="ethanolVial3">Vial 3</label>
+                    <input type="radio" id="ethanolVial4" name="vialEthanol" value="4" /><label for="ethanolVial4">Vial 4</label>
+                    <input type="radio" id="ethanolVial5" name="vialEthanol" value="5" /><label for="ethanolVial5">Vial 5</label>
+                    <input type="radio" id="ethanolVial6" name="vialEthanol" value="6" /><label for="ethanolVial6">Vial 6</label>
+                    <input type="radio" id="ethanolVial7" name="vialEthanol" value="7" /><label for="ethanolVial7">Vial 7</label>
+                  </div>
+                </div>
+                <div class="endChamberSettings indent">
+                  <span class="endChamber display" id="endChamberDisplayEthanol"></span>
+                  <div class="endChamber slider experimentSetting" id="endChamberSliderEthanol"></div>
+                </div>
+              </div>
+              <div id="endChamberAirAfter" class="indent">
+                <h2>Air After</h2>
+              <div class="endChamberSettings indent">
+                <span class="endChamber display" id="endChamberDisplayAirAfter"></span>
+                <div class="endChamber slider experimentSetting" id="endChamberSliderAirAfter"></div>
+              </div>
+              </div>
+              <div id="endChamberTotalTime" class="indent">
+                <h2>Total End Chamber Duration</h2>
+                <div class="endChamberSettings indent">
+                  <span class="endChamber display" id="endChamberDisplayTotalTime"></span>
+                </div>
+              </div>
+              <div id="endChamberLightsEnable" class="indent">
+                <button class="button" id="btnEndChamberLightsEnable">Enable End Chamber Lights</button>
+                <button class="button" id="btnEndChamberLightsDisable">Disable End Chamber Lights</button>
+              </div>
+              <div id="endChamberLightsPercentCapacity" class="indent">
+                <h2>End Chamber Lights Intensity</h2>
+                <div class="endChamberSettings indent">
+                  <span class="endChamber display" id="endChamberDisplayLightsPercentCapacity"></span>
+                  <div class="endChamber slider experimentSetting" id="endChamberSliderLightsPercentCapacity"></div>
+                </div>
+              </div>
+              <div id="endChamberLightsDurationOn" class="indent">
+                <h2>End Chamber Lights Duration On</h2>
+                <div class="endChamberSettings indent">
+                  <span class="endChamber display" id="endChamberDisplayLightsDurationOn"></span>
+                  <div class="endChamber slider experimentSetting" id="endChamberSliderLightsDurationOn"></div>
+                </div>
+              </div>
+              <div id="endChamberLightsDurationOff" class="indent">
+                <h2>End Chamber Lights Duration Off</h2>
+                <div class="endChamberSettings indent">
+                  <span class="endChamber display" id="endChamberDisplayLightsDurationOff"></span>
+                  <div class="endChamber slider experimentSetting" id="endChamberSliderLightsDurationOff"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-experiment-controls" >
+          <table id="tblExperimentControls">
+            <!-- <tr> -->
+            <!--   <td colspan="6"><button class="button" id="btnAbort">Abort Experiment</button></td> -->
+            <!-- </tr> -->
+            <tr>
+              <td colspan="2"><span id="status"></span>
+              </td>
+              <td colspan="1"><span id="statusDuration"></span>
+              </td>
+              <td colspan="2"><span id="statusTunnelsToCatch"></span>
+              </td>
+              <td colspan="1"><span id="trialCountdown"></span>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3"><button class="button" id="btnLoadFlies">Load Flies</button></td>
+              <td colspan="3"><button class="button" id="btnRunExperiment">Run Experiment</button></td>
+            </tr>
+            <tr>
+              <td><button class="button disable" id="btnDisable0" value="0"></button></td>
+              <td><button class="button disable" id="btnDisable1" value="1"></button></td>
+              <td><button class="button disable" id="btnDisable2" value="2"></button></td>
+              <td><button class="button disable" id="btnDisable3" value="3"></button></td>
+              <td><button class="button disable" id="btnDisable4" value="4"></button></td>
+              <td><button class="button disable" id="btnDisable5" value="5"></button></td>
+            </tr>
+            <tr>
+              <td><button class="button reenable" id="btnReenable0" value="0"></button></td>
+              <td><button class="button reenable" id="btnReenable1" value="1"></button></td>
+              <td><button class="button reenable" id="btnReenable2" value="2"></button></td>
+              <td><button class="button reenable" id="btnReenable3" value="3"></button></td>
+              <td><button class="button reenable" id="btnReenable4" value="4"></button></td>
+              <td><button class="button reenable" id="btnReenable5" value="5"></button></td>
+            </tr>
+            <tr>
+              <td colspan="6">
+                <div id="mjpegExperiment">
+                  <img src="http://localhost:8080/stream?topic=/camera/image_processed" />
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="/static/js/scripts/experiment.js"></script>
+  </body>
+</html>

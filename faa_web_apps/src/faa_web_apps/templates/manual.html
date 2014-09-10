@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fly Alcohol Assay Manual Control</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <link rel="stylesheet" href="static/jquery-ui-1.9.2.custom.min.css?v=2" type="text/css" />
+    <link rel="stylesheet" href="static/manual.css?v=5" type="text/css" />
+    <script type="text/javascript" src="/static/js/ros/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="/static/js/ros/roslib.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="/static/js/extras/prettyprint.js"></script>
+  </head>
+
+  <body>
+    <div id="window" >
+      <div id="tabs" >
+        <ul>
+          <li><a href="#tabs-0">Hardware Info</a></li>
+          <li><a href="#tabs-1">Image Processing Settings</a></li>
+          <li><a href="#tabs-2">Flow Rate Settings</a></li>
+          <li><a href="#tabs-3">Experiment Settings</a></li>
+          <li><a href="#tabs-4">Experiment Controls</a></li>
+        </ul>
+        <div id="tabs-0" >
+          <button class="button" id="btnInfo">Get Hardware Info</button>
+          <table id="tblInfo">
+            <tr class="rowInfo">
+              <td class="colInfo"><div class="info" id="infoDevice0"></div></td>
+              <td class="colInfo"><div class="info" id="infoDevice1"></div></td>
+              <td class="colInfo"><div class="info" id="infoDevice2"></div></td>
+            </tr>
+            <tr class="rowInfo">
+              <td class="colInfo"></td>
+              <td class="colInfo"><div class="info" id="infoDevice3"></div></td>
+              <td class="colInfo"></td>
+            </tr>
+          </table>
+        </div>
+        <div id="tabs-1" >
+          <table id="tblImageProcessing">
+            <tr>
+              <td>
+                <span>Image Size: </span><span id="imageSizeDisplay"></span>
+              </td>
+              <td>
+                <span>Line Thickness: </span><span id="lineThicknessDisplay"></span>
+              </td>
+              <td>
+                <span>Tunnel Width: </span><span id="tunnelWidthDisplay"></span>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+                <!-- <button class="button" id="btnSaveImageProcessing">Save Parameters</button> -->
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="slider image_processing" id="imageSizeSlider"></div>
+              </td>
+              <td>
+                <div class="slider image_processing" id="lineThicknessSlider"></div>
+              </td>
+              <td>
+                <div class="slider image_processing" id="tunnelWidthSlider"></div>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>Tunnel Height: </span><span id="tunnelHeightDisplay"></span>
+              </td>
+              <td>
+                <span>Tunnel Y Offset: </span><span id="tunnelYOffsetDisplay"></span>
+              </td>
+              <td>
+                <span>Gate Height: </span><span id="gateHeightDisplay"></span>
+              </td>
+              <td>
+                <span>Gate Y Offset 0: </span><span id="gateYOffsetDisplay0"></span>
+              </td>
+              <td>
+                <span>Gate Y Offset 1: </span><span id="gateYOffsetDisplay1"></span>
+              </td>
+              <td>
+                <span>Gate Y Offset 2: </span><span id="gateYOffsetDisplay2"></span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="slider image_processing" id="tunnelHeightSlider"></div>
+              </td>
+              <td>
+                <div class="slider image_processing" id="tunnelYOffsetSlider"></div>
+              </td>
+              <td>
+                <div class="slider image_processing" id="gateHeightSlider"></div>
+              </td>
+              <td>
+                <div class="slider image_processing yOffset" id="gateYOffsetSlider0" data-gate="0"></div>
+              </td>
+              <td>
+                <div class="slider image_processing yOffset" id="gateYOffsetSlider1" data-gate="1"></div>
+              </td>
+              <td>
+                <div class="slider image_processing yOffset" id="gateYOffsetSlider2" data-gate="2"></div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>Tunnel X Offset 0: </span><span id="tunnelXOffsetDisplay0"></span>
+              </td>
+              <td>
+                <span>Tunnel X Offset 1: </span><span id="tunnelXOffsetDisplay1"></span>
+              </td>
+              <td>
+                <span>Tunnel X Offset 2: </span><span id="tunnelXOffsetDisplay2"></span>
+              </td>
+              <td>
+                <span>Tunnel X Offset 3: </span><span id="tunnelXOffsetDisplay3"></span>
+              </td>
+              <td>
+                <span>Tunnel X Offset 4: </span><span id="tunnelXOffsetDisplay4"></span>
+              </td>
+              <td>
+                <span>Tunnel X Offset 5: </span><span id="tunnelXOffsetDisplay5"></span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="slider image_processing xOffset" id="tunnelXOffsetSlider0" data-tunnel="0"></div>
+              </td>
+              <td>
+                <div class="slider image_processing xOffset" id="tunnelXOffsetSlider1" data-tunnel="1"></div>
+              </td>
+              <td>
+                <div class="slider image_processing xOffset" id="tunnelXOffsetSlider2" data-tunnel="2"></div>
+              </td>
+              <td>
+                <div class="slider image_processing xOffset" id="tunnelXOffsetSlider3" data-tunnel="3"></div>
+              </td>
+              <td>
+                <div class="slider image_processing xOffset" id="tunnelXOffsetSlider4" data-tunnel="4"></div>
+              </td>
+              <td>
+                <div class="slider image_processing xOffset" id="tunnelXOffsetSlider5" data-tunnel="5"></div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="6">
+                <div id="mjpeg">
+                  <img src="http://localhost:8080/stream?topic=/camera/image_processed" />
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div id="tabs-2" >
+          <!-- <button class="button" id="btnSaveFlowRates">Save Parameters</button> -->
+          <div id="odor0FlowRateSettings" class="settings">
+            <p>
+              <h1>Odor 1</h1>
+              <label for="odor0Mfc0Display">MFC 1 Percent Capacity Setting:</label>
+              <span class="mfc display" id="odor0Mfc0Display"></span>
+              <div class="mfc slider" id="odor0Mfc0Slider"></div>
+              <label for="odor0Mfc1Display">MFC 2 Percent Capacity Setting:</label>
+              <span class="mfc display" id="odor0Mfc1Display"></span>
+              <div class="mfc slider" id="odor0Mfc1Slider"></div>
+            </p>
+          </div>
+          <div id="odor1FlowRateSettings" class="settings">
+            <p>
+              <h1>Odor 2</h1>
+              <label for="odor1Mfc0Display">MFC 1 Percent Capacity Setting:</label>
+              <span class="mfc display" id="odor1Mfc0Display"></span>
+              <div class="mfc slider" id="odor1Mfc0Slider"></div>
+              <label for="odor1Mfc1Display">MFC 2 Percent Capacity Setting:</label>
+              <span class="mfc display" id="odor1Mfc1Display"></span>
+              <div class="mfc slider" id="odor1Mfc1Slider"></div>
+            </p>
+          </div>
+          <div id="ethanolFlowRateSettings" class="settings">
+            <p>
+              <h1>Ethanol</h1>
+              <label for="ethanolMfc0Display">MFC 1 Percent Capacity Setting:</label>
+              <span class="mfc display" id="ethanolMfc0Display"></span>
+              <div class="mfc slider" id="ethanolMfc0Slider"></div>
+              <label for="ethanolMfc1Display">MFC 2 Percent Capacity Setting:</label>
+              <span class="mfc display" id="ethanolMfc1Display"></span>
+              <div class="mfc slider" id="ethanolMfc1Slider"></div>
+            </p>
+          </div>
+        </div>
+        <div id="tabs-3" >
+          <div id="experimentSettings">
+            <!-- <button class="button" id="btnSaveExperimentParameters">Save Parameters</button> -->
+            <div class="settings">
+              <h1>Experiment Name</h1>
+              <div class="acclimationSettings">
+                <input type="text" id="experimentName">
+                <button class="button" id="btnSetExperimentName">Set</button>
+                <span class="display" id="experimentNameDisplay"></span>
+              </div>
+            </div>
+            <div class="settings">
+              <h1>Acclimation Duration</h1>
+              <div class="acclimationSettings">
+                <span class="acclimation display" id="acclimationDisplay"></span>
+                <div class="acclimation slider" id="acclimationSlider"></div>
+              </div>
+            </div>
+            <div class="settings">
+              <h1>Ethanol Chamber Settings</h1>
+              <div id="ethanolChamberAirBefore" class="settings">
+                <h2>Air Before</h2>
+                <div class="ethanolChamberSettings">
+                  <span class="ethanolChamber display" id="ethanolChamberDisplayAirBefore"></span>
+                  <div class="ethanolChamber slider" id="ethanolChamberSliderAirBefore"></div>
+                </div>
+              </div>
+              <div id="ethanolChamberEthanol" class="settings">
+                <h2>Ethanol</h2>
+                <div class="ethanolChamberSettings">
+                  <div id="ethanolVialSelection">
+                    <input type="radio" id="ethanolVial0" name="vialEthanol" value="0" /><label for="ethanolVial0">Vial 0 (Dummy)</label>
+                    <input type="radio" id="ethanolVial1" name="vialEthanol" value="1" checked="checked" /><label for="ethanolVial1">Vial 1</label>
+                    <input type="radio" id="ethanolVial2" name="vialEthanol" value="2" /><label for="ethanolVial2">Vial 2</label>
+                    <input type="radio" id="ethanolVial3" name="vialEthanol" value="3" /><label for="ethanolVial3">Vial 3</label>
+                    <input type="radio" id="ethanolVial4" name="vialEthanol" value="4" /><label for="ethanolVial4">Vial 4</label>
+                    <input type="radio" id="ethanolVial5" name="vialEthanol" value="5" /><label for="ethanolVial5">Vial 5</label>
+                    <input type="radio" id="ethanolVial6" name="vialEthanol" value="6" /><label for="ethanolVial6">Vial 6</label>
+                    <input type="radio" id="ethanolVial7" name="vialEthanol" value="7" /><label for="ethanolVial7">Vial 7</label>
+                  </div>
+                </div>
+                <div class="ethanolChamberSettings">
+                  <span class="ethanolChamber display" id="ethanolChamberDisplayEthanol"></span>
+                  <div class="ethanolChamber slider" id="ethanolChamberSliderEthanol"></div>
+                </div>
+              </div>
+              <div id="ethanolChamberAirAfter" class="settings">
+                <h2>Air After</h2>
+                <div class="ethanolChamberSettings">
+                  <span class="ethanolChamber display" id="ethanolChamberDisplayAirAfter"></span>
+                  <div class="ethanolChamber slider" id="ethanolChamberSliderAirAfter"></div>
+                </div>
+              </div>
+              <div id="ethanolChamberTotalTime" class="settings">
+                <h2>Total Ethanol Chamber Time</h2>
+                <div class="ethanolChamberSettings">
+                  <span class="ethanolChamber display" id="ethanolChamberDisplayTotalTime"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tabs-4" >
+          <table id="tblStates">
+            <tr>
+              <td colspan="6"><button class="button" id="btnReset">Reset</button></td>
+            </tr>
+            <tr>
+              <td colspan="2"><span class="timer ethanol display" id="elapsedTimeDisplayAirBefore"></span></td>
+              <td colspan="2"><span class="timer ethanol display" id="elapsedTimeDisplayEthanol"></span></td>
+              <td colspan="2"><span class="timer ethanol display" id="elapsedTimeDisplayAirAfter"></div></td>
+</tr>
+<tr>
+  <td colspan="2"><div class="timer ethanol progressbar" id="elapsedTimeProgressbarAirBefore"></div></td>
+  <td colspan="2"><div class="timer ethanol progressbar" id="elapsedTimeProgressbarEthanol"></div></td>
+  <td colspan="2"><div class="timer ethanol progressbar" id="elapsedTimeProgressbarAirAfter"></div></td>
+</tr>
+<tr>
+  <td colspan="6"><span class="timer ethanol display" id="elapsedTimeDisplayEthanolTotal"></span></td>
+</tr>
+<tr>
+  <td colspan="6"><div class="timer ethanol progressbar" id="elapsedTimeProgressbarEthanolTotal"></div></td>
+</tr>
+<tr>
+  <td colspan="6"><button class="button ethanol" id="btnEthanolReady">All Ethanol Chambers Ready</button></td>
+</tr>
+<tr>
+  <td><button class="button ethanol btnWait" id="btnWaitEthanol0" value="0"></button></td>
+  <td><button class="button ethanol btnWait" id="btnWaitEthanol1" value="1"></button></td>
+  <td><button class="button ethanol btnWait" id="btnWaitEthanol2" value="2"></button></td>
+  <td><button class="button ethanol btnWait" id="btnWaitEthanol3" value="3"></button></td>
+  <td><button class="button ethanol btnWait" id="btnWaitEthanol4" value="4"></button></td>
+  <td><button class="button ethanol btnWait" id="btnWaitEthanol5" value="5"></button></td>
+</tr>
+<tr>
+  <td><button class="button ethanol btnReopen" id="btnReopenEthanol0" value="0"></button></td>
+  <td><button class="button ethanol btnReopen" id="btnReopenEthanol1" value="1"></button></td>
+  <td><button class="button ethanol btnReopen" id="btnReopenEthanol2" value="2"></button></td>
+  <td><button class="button ethanol btnReopen" id="btnReopenEthanol3" value="3"></button></td>
+  <td><button class="button ethanol btnReopen" id="btnReopenEthanol4" value="4"></button></td>
+  <td><button class="button ethanol btnReopen" id="btnReopenEthanol5" value="5"></button></td>
+</tr>
+<tr>
+  <td colspan="6"><button class="button ethanol btnWalk" id="btnWalkEthanol">Walk to Ethanol Chambers</button></td>
+</tr>
+<tr>
+  <td><span class="timer walk display">Walk Time 1</span></td>
+  <td><span class="timer walk display">Walk Time 2</span></td>
+  <td><span class="timer walk display">Walk Time 3</span></td>
+  <td><span class="timer walk display">Walk Time 4</span></td>
+  <td><span class="timer walk display">Walk Time 5</span></td>
+  <td><span class="timer walk display">Walk Time 6</span></td>
+</tr>
+<tr>
+  <td><span class="timer walk display" id="elapsedTimeDisplayWalk0" value="0"></span></td>
+  <td><span class="timer walk display" id="elapsedTimeDisplayWalk1" value="1"></span></td>
+  <td><span class="timer walk display" id="elapsedTimeDisplayWalk2" value="2"></span></td>
+  <td><span class="timer walk display" id="elapsedTimeDisplayWalk3" value="3"></span></td>
+  <td><span class="timer walk display" id="elapsedTimeDisplayWalk4" value="4"></span></td>
+  <td><span class="timer walk display" id="elapsedTimeDisplayWalk5" value="5"></span></td>
+</tr>
+<tr>
+  <td colspan="6"><button class="button start btnWalk" id="btnWalkStart">Walk to Start Chambers</button></td>
+</tr>
+<tr>
+  <td><button class="button start btnReopen" id="btnReopenStart0" value="0"></button></td>
+  <td><button class="button start btnReopen" id="btnReopenStart1" value="1"></button></td>
+  <td><button class="button start btnReopen" id="btnReopenStart2" value="2"></button></td>
+  <td><button class="button start btnReopen" id="btnReopenStart3" value="3"></button></td>
+  <td><button class="button start btnReopen" id="btnReopenStart4" value="4"></button></td>
+  <td><button class="button start btnReopen" id="btnReopenStart5" value="5"></button></td>
+</tr>
+<tr>
+  <td><button class="button start btnWait" id="btnWaitStart0" value="0"></button></td>
+  <td><button class="button start btnWait" id="btnWaitStart1" value="1"></button></td>
+  <td><button class="button start btnWait" id="btnWaitStart2" value="2"></button></td>
+  <td><button class="button start btnWait" id="btnWaitStart3" value="3"></button></td>
+  <td><button class="button start btnWait" id="btnWaitStart4" value="4"></button></td>
+  <td><button class="button start btnWait" id="btnWaitStart5" value="5"></button></td>
+</tr>
+<tr>
+  <td colspan="6"><button class="button start" id="btnStartReady">All Start Chambers Ready</button></td>
+</tr>
+<tr>
+  <td colspan="1"><span class="timer start display">Wait Time Limit:</span></td>
+  <td colspan="1"><div class="timer start slider" id="waitTimeSliderStart"></div></td>
+  <td colspan="1"><span class="timer start display" id="waitTimeDisplayStart"></span></td>
+  <td colspan="1"><span class="timer start display">Elapsed Time Waiting in Start Chambers:</span></td>
+  <td colspan="1"><span class="timer start display" id="elapsedTimeDisplayStart"></span></td>
+  <td colspan="1"><div class="timer start progressbar" id="elapsedTimeProgressbarStart"></div></td>
+</tr>
+<tr>
+  <td colspan="3"><button class="button acclimate" id="btnEndAcclimation">End Acclimation Early</button></td>
+  <td colspan="1"><span class="timer acclimate display">Elapsed Acclimation Time:</span></td>
+  <td colspan="1"><span class="timer acclimate display" id="elapsedTimeDisplayAcclimation"></span></td>
+  <td colspan="1"><div class="timer acclimate progressbar" id="elapsedTimeProgressbarAcclimation"></div></td>
+</tr>
+<tr>
+  <td colspan="6"><button class="button acclimate" id="btnAcclimateFlies">Acclimate Flies</button></td>
+</tr>
+<tr>
+  <td colspan="6"><button class="button" id="btnLoadFlies">Load Flies</button></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<script type="text/javascript" src="/static/js/scripts/manual.js"></script>
+</body>
+</html>

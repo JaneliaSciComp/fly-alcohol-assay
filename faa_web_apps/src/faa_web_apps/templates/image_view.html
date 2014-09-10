@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fly Alcohol Assay Image Viewer</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="pragma" content="no-cache">
+    <!-- <link rel="stylesheet" href="static/jquery-ui-1.9.2.custom.min.css?v=2" type="text/css" /> -->
+    <!-- <link rel="stylesheet" href="static/style.css?v=1" type="text/css" /> -->
+    <script type="text/javascript" src="/static/js/ros/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="/static/js/ros/mjpegcanvas.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery/jquery-1.8.3.min.js"></script>
+    <!-- <script type="text/javascript" src="/static/js/jquery/jquery-ui-1.9.2.custom.min.js"></script> -->
+    <script type="text/javascript" src="/static/js/sijax/sijax.js"></script>
+    <script type="text/javascript">
+      {{ g.sijax.get_js()|safe }}
+    </script>
+  </head>
+  
+  <body onload="init()">
+    <h1>Fly Alcohol Assay Image View</h1>
+    <div id="mjpeg"></div>
+    <script type="text/javascript" src="/static/js/scripts/script.js"></script>
+  </body>
+</html>

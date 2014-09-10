@@ -1,0 +1,6 @@
+string name 
+int32 channel
+---
+bool enable
+int32 max_current
+int32 current

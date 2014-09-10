@@ -1,0 +1,13 @@
+uint32 seq
+uint32 secs
+uint32 nsecs
+string camera
+bool found
+float32 angle
+float32 angle_deg
+Point2d midpt_anchor_plane
+Point2d midpt_stitching_plane
+Point2d[] pts_anchor_plane
+Point2d[] pts_stitching_plane
+Point2d[] bndry_anchor_plane
+Point2d[] bndry_stitching_plane

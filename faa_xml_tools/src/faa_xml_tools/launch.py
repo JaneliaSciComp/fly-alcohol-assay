@@ -1,0 +1,808 @@
+from __future__ import print_function
+import roslib; roslib.load_manifest('faa_xml_tools')
+import rospy
+import os
+import os.path
+import jinja2
+import yaml
+import faa_introspection
+import faa_utilities
+
+file_path, dummy = os.path.split(__file__)
+template_dir = os.path.join(file_path, 'templates')
+
+def create_inspector_launch(filename,machine_names):
+    """
+    Creates launch file for camera inspector nodes.
+    """
+    template_name ='inspector_nodes_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+
+    # Use jinja2 to create xml string
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(machine_file=machine_file, machine_names=machine_names)
+
+    # Write lauch file
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def create_machine_launch(filename,machine_def):
+    """
+    Creates the faa_machine.launch file from the machine definition found in
+    the machine_def.yaml file.
+    """
+    template_name = 'faa_machine.xml'
+    user = machine_def['user']
+    master_info = machine_def['faa_master']
+    master_info['name'] = 'faa_master'
+    master_info['default'] = 'true'
+
+    slave_keys = machine_def.keys()
+    slave_keys.remove('faa_master')
+    slave_keys.remove('user')
+    slave_keys.sort()
+    machine_info_list = [master_info]
+    for name in slave_keys:
+        slave_info = machine_def[name]
+        slave_info['name' ] = name
+        slave_info['default'] = 'false'
+        machine_info_list.append(slave_info)
+
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(user=user,machine_info_list=machine_info_list)
+
+    with open(filename, 'w') as f:
+        f.write(xml_str)
+
+
+def create_inspector_camera_yaml(tmp_dir,camera_dict):
+    """
+    Creates the yaml files for each camera which are required for the
+    lauch file. Note, add the yaml file to the info dictionary for each
+    camera for later use.
+    """
+    for guid, info in camera_dict.iteritems():
+        filename = os.path.join(tmp_dir,'camera_{0}.yaml'.format(guid))
+        info['yaml_file'] = filename
+        with open(filename,'w') as f:
+            data = {'guid': guid, 'frame_id': 'camera_{0}'.format(guid)}
+            yaml.dump(data,f,default_flow_style=False)
+    return camera_dict
+
+
+def create_inspector_camera_launch(filename, camera_dict):
+    """
+    Creates camera launch file which will called from the camera inspector node.
+
+    Note, assumes that the yaml files for the cameras have been added to the
+    info dict for each camera.
+    """
+    template_name = 'inspector_camera_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+    frame_rate_dict = faa_introspection.get_frame_rates()
+    frame_rate = frame_rate_dict['camera_driver']
+
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            camera_dict=camera_dict,
+            frame_rate=frame_rate,
+            )
+
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def create_mjpeg_server_launch(filename, mjpeg_info_dict):
+    """
+    Creates a launch file for the mjpeg servers based on the mjpeg information
+    dictionary, mjpeg_info_dict. This function is designed to be called from
+    the mjpeg_manager node.
+    """
+    template_name = 'mjpeg_server_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(machine_file=machine_file, mjpeg_info_dict=mjpeg_info_dict)
+
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def create_camera_launch(filename, camera_assignment, frame_rate='default', trigger=False):
+    """
+    Generates a camera launch file based on the current camera assignment.
+
+    Note, if camera assignment is given it assumes that the camera yaml files
+    have been added to the camera assignment.
+    """
+    template_name = 'camera_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+    frame_rate_dict = faa_introspection.get_frame_rates()
+    frame_rate_value = frame_rate_dict[frame_rate]
+
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            camera_assignment=camera_assignment,
+            trigger=trigger,
+            frame_rate=frame_rate_value,
+            )
+
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def create_camera_yaml(directory, camera_assignment):
+    """
+    Creates the yaml files for the given camera assignment.
+
+    Also, adds the yaml file to the information dictionary for each camera in
+    the assignment.
+    """
+    for camera, info in camera_assignment.iteritems():
+        filename = os.path.join(directory, '{0}.yaml'.format(camera))
+        info['yaml_file'] = filename
+        with open(filename,'w') as f:
+            f.write('\n# Autogenerated configuration file - do not hand edit\n\n')
+            data = {'guid': info['guid'], 'frame_id': camera}
+            yaml.dump(data,f,default_flow_style=False)
+    return camera_assignment
+
+
+def create_camera_calibrator_launch(filename, image_topics, chessboard_size, chessboard_square):
+    """
+    Create launch file for camera calibrators.
+    """
+    template_name = 'camera_calibrator_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+
+    # Pack up calibrator data
+    camera_names = [val.split('/')[2] for val in image_topics]
+    camera_topics = [val.replace('/image_raw','') for val in image_topics]
+    machines = [val.split('/')[1] for val in image_topics]
+    calibrator_data = zip(camera_names, camera_topics, image_topics, machines)
+
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            calibrator_data=calibrator_data,
+            chessboard_size=chessboard_size,
+            chessboard_square=chessboard_square,
+            )
+
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def create_image_proc_launch(filename):
+    """
+    Creates launch file for image rectification and processing nodes
+    """
+    template_name = 'image_proc_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+
+    # Create dictionary which associates a camera name to its namespace for all
+    # cameras which have a calibration
+    namespace_dict = faa_introspection.get_camera_namespace_dict()
+    camera_list = faa_introspection.get_calibrated_cameras()
+    for camera in namespace_dict.keys():
+        if not camera in camera_list:
+            namespace_dict.pop(camera)
+
+    # Create a list given pairs (camera namespace, computer) on which to launch
+    # image_proc nodes.
+    camera_assignment = faa_introspection.get_camera_assignment()
+    launch_list = []
+    for camera, namespace in namespace_dict.iteritems():
+        computer = camera_assignment[camera]['computer']
+        launch_list.append((namespace,computer))
+
+    # Create xml launch file
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(machine_file=machine_file, launch_list=launch_list)
+
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def create_homography_calibrator_launch(filename):
+    """
+    Creates launch file for homography calibrators
+    """
+    template_name = 'homography_calibrator_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+    params_file = faa_utilities.file_tools.homography_calibrator_params_file
+
+    # Get list of pairs (namespace, rectified images)
+    image_rect_list = faa_introspection.find_camera_image_topics(transport='image_rect')
+    launch_list = []
+    for topic in image_rect_list:
+        print(topic)
+        topic_split = topic.split('/')
+        namespace = '/'.join(topic_split[:4])
+        launch_list.append((namespace,topic))
+
+    # Create xml launch file
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            params_file=params_file,
+            launch_list=launch_list
+            )
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def create_zoom_tool_launch(filename):
+    """
+    Creates launch file for zoom tool nodes.
+    """
+    template_name = 'zoom_tool_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+    params_file = faa_utilities.file_tools.zoom_tool_params_file
+    camera_assignment = faa_utilities.file_tools.read_camera_assignment()
+
+    # Create launch list for zoom tools (namespace, topic, computer)
+    image_topics = faa_introspection.find_camera_image_topics(transport='image_raw')
+    launch_list = []
+    for topic in image_topics:
+        topic_split = topic.split('/')
+        namespace = '/'.join(topic_split[:4])
+        camera = topic_split[2]
+        computer = camera_assignment[camera]['computer']
+        launch_list.append((namespace,topic,computer))
+
+    # Create xml launch file
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            params_file=params_file,
+            launch_list=launch_list
+            )
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def create_transform_2d_calibrator_launch(filename):
+    """
+    Creates launch file for transform_2d_calibrator nodes.
+    """
+    template_name = 'transform_2d_calibrator_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+    params_file = faa_utilities.file_tools.transform_2d_calibrator_params_file
+
+    # Get region and camera pair information
+    region_dict = faa_utilities.file_tools.read_tracking_2d_regions()
+    camera_pairs_dict = faa_utilities.file_tools.read_tracking_2d_camera_pairs()
+
+    # Get dictionary of camera to rectified images
+    image_rect_list = faa_introspection.find_camera_image_topics(transport='image_rect')
+    camera_to_image_rect = {}
+    for camera_list in region_dict.values():
+        for camera in camera_list:
+            for image_rect in image_rect_list:
+                if camera in image_rect.split('/'):
+                    camera_to_image_rect[camera] = image_rect
+
+    # Create launch list (namespace, topic0, topic1)
+    launch_list = []
+    for pairs_list in camera_pairs_dict.values():
+        for camera0, camera1 in pairs_list:
+            try:
+                namespace = '/{0}_{1}'.format(camera0, camera1)
+                topic0 = camera_to_image_rect[camera0]
+                topic1 = camera_to_image_rect[camera1]
+                launch_list.append((namespace, topic0, topic1))
+            except KeyError:
+                pass
+
+    # Create xml launch file
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            params_file=params_file,
+            launch_list=launch_list
+            )
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def create_static_tf_publisher_2d_launch(filename):
+    """
+    Create static transform publisher launch file.
+
+    Note, This function is not currently being used as ROS's tf system didn't do exactly
+    what I was looking for.
+    """
+    template_name = 'static_tf_publisher_2d_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+
+    # Generate lauch list
+    launch_list = []
+    camera_pairs_dict = faa_utilities.file_tools.read_tracking_2d_camera_pairs()
+    for pairs_list in camera_pairs_dict.values():
+        for cam_0, cam_1 in pairs_list:
+            # Get camera numbers and use to form frame ids for tracking planes
+            num_0 = int(cam_0.split('_')[1])
+            num_1 = int(cam_1.split('_')[1])
+            frame_0 = 'tracking_plane_{0}'.format(num_0)
+            frame_1 = 'tracking_plane_{0}'.format(num_1)
+
+            # Get 2d transformation and make 3d
+            transform_2d = faa_utilities.file_tools.read_transform_2d_calibration(cam_0,cam_1)
+            tx = transform_2d['translation_x']
+            ty = transform_2d['translation_y']
+            tz = 0.0
+            ang = transform_2d['rotation']
+            rate_ms = 10
+            node_name = 'tracking_plane_{0}_to_{1}_broadcaster'.format(num_0,num_1)
+            node_args = '{0} {1} {2} {3} {4} {5} {6} {7} {8}'.format(tx, ty, tz, 0.0, 0.0, ang, frame_0, frame_1, rate_ms)
+            launch_list.append((node_name,node_args))
+
+    # Create xml launch file
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            launch_list=launch_list
+            )
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def create_three_point_tracker_launch(filename):
+    """
+    Creates luanch file for three point tracker nodes based on the camera_lists
+    in the regions.yaml.
+    """
+    template_name = 'three_point_tracker_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+    regions_dict = faa_utilities.file_tools.read_tracking_2d_regions()
+    # ------------------------------------------------------------------------------------
+    # Old style - before frame drop correctors
+    #image_topic_list = faa_introspection.find_camera_image_topics(transport='image_rect')
+    # ------------------------------------------------------------------------------------
+    image_topic_list = faa_introspection.find_camera_image_topics(transport='seq_and_image_corr')
+
+    # Create launch dictionary keyed by region.
+    launch_dict = {}
+    for region, camera_list in regions_dict.iteritems():
+        region_launch_list = []
+        for camera in camera_list:
+            for rect_topic in image_topic_list:
+                rect_topic_split = rect_topic.split('/')
+                if camera in rect_topic_split:
+                    camera_topic = '/'.join(rect_topic_split[:-1])
+                    machine = rect_topic_split[1]
+                    region_launch_list.append((camera_topic, rect_topic, machine))
+        launch_dict[region] = region_launch_list
+
+    # Create xml launch file
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            launch_dict=launch_dict,
+            )
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def create_image_stitcher_launch(filename):
+    """
+    Creates launch file for the image stitcher nodes based on the regions in
+    the regions.yaml file.
+    """
+    template_name = 'image_stitcher_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+    regions_dict = faa_utilities.file_tools.read_tracking_2d_regions()
+
+    # Debug --------------------------------------------------------------------
+    ## Remove regions with only one camera - no point in stitching these regions
+    #for region, camera_list in regions_dict.items():
+    #    if len(camera_list) <= 1:
+    #        del regions_dict[region]
+    # --------------------------------------------------------------------------
+
+    # Create xml launch file
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            regions_dict=regions_dict,
+            )
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def create_stitched_image_labeler_launch(filename):
+    """
+    Creates launch file for the stitched image labeler nodes based on the regions
+    in the regions.yaml file.
+    """
+    template_name = 'stitched_image_labeler_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+    regions_dict = faa_utilities.file_tools.read_tracking_2d_regions()
+
+    launch_dict = {}
+    for region in regions_dict:
+        arg0 = '/{0}/seq_and_image_stitched'.format(region)
+        arg1 = '/{0}/tracking_pts'.format(region)
+        launch_dict[region] = (arg0, arg1)
+
+    # Create xml launch file
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            launch_dict=launch_dict,
+            )
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def create_frame_skipper_launch(filename):
+    """
+    Creates launch file for frame skipper nodes. One for every camera.
+    """
+    template_name = 'frame_skipper_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+
+    # Get frame skip parameter
+    stitching_params = faa_utilities.file_tools.read_tracking_2d_stitching_params()
+    skip_param = stitching_params['frame_skip']
+
+    # Get list of currently running camera names and create launch list
+    camera_node_list = faa_introspection.get_camera_nodes()
+    camera_list = [node.split('/')[2] for node in camera_node_list]
+    # -----------------------------------------------------
+    # Old style - before frame drop correctors
+    #launch_list = get_rect_or_raw_launch_list(camera_list)
+    # -----------------------------------------------------
+    launch_list = get_corr_launch_list(camera_list)
+
+    # Create xml launch file
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            launch_list=launch_list,
+            skip_param = skip_param,
+            )
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def get_corr_launch_list(camera_list):
+    """
+    Returns a launch list for all cameras consisting of the seq_and_image_corr
+    topics.
+
+    The launch list consists of tuples (namespace, topic, machine)
+    """
+    camera_to_corr = get_camera_to_image_topic(camera_list, 'seq_and_image_corr')
+    launch_list = []
+    for camera in camera_list:
+        topic = camera_to_corr[camera]
+        topic_split = topic.split('/')
+        namespace = '/'.join(topic_split[:4])
+        machine = topic_split[1]
+        launch_list.append((namespace, topic, machine))
+    return launch_list
+
+
+def create_frame_drop_corrector_launch(filename,framerate):
+    """
+    Creates launch file for the frame drop corrector nodes.
+    """
+    template_name = 'frame_drop_corrector_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+
+    # Get list of currently running camera names
+    camera_node_list = faa_introspection.get_camera_nodes()
+    camera_list = [node.split('/')[2] for node in camera_node_list]
+    launch_list = get_rect_or_raw_launch_list(camera_list)
+
+    # Create xml launch file
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            launch_list=launch_list,
+            framerate=framerate,
+            )
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+def get_rect_or_raw_launch_list(camera_list):
+    """
+    Returns a launch list for all cameras consisting of either the rectified or
+    raw image streams. The rectified images stream in prefered if it is
+    available.
+
+    The launch list consists of a list of tuples (namespace, topic, machine).
+    """
+
+    # Get dictionaries mapping cameras to raw and rectified image topics
+    camera_to_image_raw = get_camera_to_image_topic(camera_list, 'image_raw')
+    camera_to_image_rect = get_camera_to_image_topic(camera_list, 'image_rect')
+
+    # Assign image topic  for each camera.  Use rectified image if it exists
+    # otherwise use raw image.
+    launch_list = []
+    for camera in camera_list:
+        try:
+            topic = camera_to_image_rect[camera]
+        except KeyError:
+            topic = camera_to_image_raw[camera]
+        topic_split = topic.split('/')
+        namespace = '/'.join(topic_split[:4])
+        machine = topic_split[1]
+        launch_list.append((namespace, topic, machine))
+    return launch_list
+
+
+def get_camera_to_image_topic(camera_list, topic_name):
+    """
+    Create dictionaries mapping cameras to images with the given topic name.
+    """
+    image_topic_list = faa_introspection.find_camera_image_topics(transport=topic_name)
+    camera_to_image_topic = {}
+    for camera in camera_list:
+        for image_topic in image_topic_list:
+            if camera in image_topic.split('/'):
+                camera_to_image_topic[camera] = image_topic
+    return camera_to_image_topic
+
+
+def create_avi_writer_launch(filename):
+    """
+    Creates launch file for avi writer nodes.
+    """
+    template_name = 'avi_writer_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+
+    extra_video_dict = faa_utilities.file_tools.read_logging_extra_video()
+    regions_dict = faa_utilities.file_tools.read_tracking_2d_regions()
+
+    launch_list = []
+    for region in regions_dict:
+
+        namespace = '/{0}/image_stitched_labeled'.format(region)
+        topic = '/{0}/image_stitched_labeled'.format(region)
+        launch_list.append((namespace, topic))
+
+        namespace = '/{0}/image_tracking_pts'.format(region)
+        topic = '/{0}/image_tracking_pts'.format(region)
+        launch_list.append((namespace, topic))
+
+    for name, topic in extra_video_dict.iteritems():
+        namespace = '/extra_video/{0}'.format(name)
+        launch_list.append((namespace,topic))
+
+    # Create xml launch file
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            launch_list=launch_list,
+            )
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+def create_tracking_pts_logger_launch(filename):
+    """
+    Creates launch file for tracking points loggers.
+    """
+    template_name = 'tracking_pts_logger_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+    regions_dict = faa_utilities.file_tools.read_tracking_2d_regions()
+
+    launch_list = [(r, '/{0}/tracking_pts'.format(r)) for r in regions_dict]
+
+    # Create xml launch file
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            launch_list=launch_list,
+            )
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+def create_frame_drop_test_launch(filename,camera0,camera1,display=True):
+    """
+    Creates launch file for the blob_finder based frame drop test.
+    """
+    template_name = 'frame_drop_test_launch.xml'
+    machine_file = faa_utilities.file_tools.machine_launch_file
+
+    image_corr_topic_list = faa_introspection.find_topics_w_ending('seq_and_image_corr')
+    camera_to_image_corr = {}
+    for topic in image_corr_topic_list:
+        for camera in (camera0, camera1):
+            if '{0}/'.format(camera) in topic:
+                camera_to_image_corr[camera] = topic
+
+    blob_finder_launch = []
+    for camera, topic in camera_to_image_corr.iteritems():
+        topic_split = topic.split('/')
+        machine = topic_split[1]
+        launch_item = (
+                '/frame_drop_test/{0}'.format(camera),
+                topic,
+                machine
+                )
+        blob_finder_launch.append(launch_item)
+
+    # Create xml launch file
+    jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template = jinja2_env.get_template(template_name)
+    xml_str = template.render(
+            machine_file=machine_file,
+            blob_finder_launch=blob_finder_launch,
+            display=display,
+            )
+    with open(filename,'w') as f:
+        f.write(xml_str)
+
+
+
+# -----------------------------------------------------------------------------
+if __name__ == '__main__':
+
+    # Testing and development
+
+    if 0:
+        filename = 'camera1394_inspector.launch'
+        machines = ['c1', 'c2', 'c3']
+        create_inspector_launch(filename,machines)
+
+    if 0:
+        filename = 'faa.mcahine'
+        machine_def = {
+                'user' : 'albert',
+                'faa_master' : {'address' : 'felis'},
+                }
+        for i in range(0,10):
+            machine_def['faa_slave{0}'.format(i)] = {'address' : 'tabby{0}'.format(i)}
+        create_machine_launch(filename,machine_def)
+
+    if 0:
+        filename = 'inspector_camera.launch'
+        tmp_dir = '.'
+        camera_dict = {
+                '30530001412079' :  {'machine': 'slave2', 'model': 'scA640-120fm', 'vendor': 'Basler', 'unit': 0},
+                '305300013f2efa' :  {'machine': 'master', 'model': 'scA640-120fm', 'vendor': 'Basler', 'unit': 0},
+                '305300013f2efb' :  {'machine': 'master', 'model': 'scA640-120fm', 'vendor': 'Basler', 'unit': 0},
+                '305300013f2ef9' :  {'machine': 'slave2', 'model': 'scA640-120fm', 'vendor': 'Basler', 'unit': 0},
+                '3053000140e715' :  {'machine': 'slave1', 'model': 'scA640-120fm', 'vendor': 'Basler', 'unit': 0},
+                '305300013f2ef8' :  {'machine': 'slave2', 'model': 'scA640-120fm', 'vendor': 'Basler', 'unit': 0},
+                '30530001410997' :  {'machine': 'slave1', 'model': 'scA640-120fm', 'vendor': 'Basler', 'unit': 0},
+                '305300013f2ef4' :  {'machine': 'master', 'model': 'scA640-120fm', 'vendor': 'Basler', 'unit': 0},
+                '305300013f2ef5' :  {'machine': 'master', 'model': 'scA640-120fm', 'vendor': 'Basler', 'unit': 0},
+                '305300013f2ef6' :  {'machine': 'slave1', 'model': 'scA640-120fm', 'vendor': 'Basler', 'unit': 0},
+                '305300013f2ef7' :  {'machine': 'slave2', 'model': 'scA640-120fm', 'vendor': 'Basler', 'unit': 0},
+                '305300013f2ef3' :  {'machine': 'slave1', 'model': 'scA640-120fm', 'vendor': 'Basler', 'unit': 0},
+                }
+        create_inspector_camera_yaml(tmp_dir,camera_dict)
+        create_inspector_camera_launch(filename, camera_dict)
+
+    if 0:
+        filename = 'mjpeg_server.launch'
+        mjpeg_info_dict = {
+                '00305300013f2ef3': {'image_topic': '/faa_slave1/00305300013f2ef3/camera/image_raw', 'mjpeg_port': 8083, 'mjpeg_server': 'mjpeg_server_00305300013f2ef3'},
+                '00305300013f2ef6': {'image_topic': '/faa_slave1/00305300013f2ef6/camera/image_raw', 'mjpeg_port': 8085, 'mjpeg_server': 'mjpeg_server_00305300013f2ef6'},
+                '00305300013f2ef7': {'image_topic': '/faa_slave2/00305300013f2ef7/camera/image_raw', 'mjpeg_port': 8089, 'mjpeg_server': 'mjpeg_server_00305300013f2ef7'},
+                '00305300013f2ef4': {'image_topic': '/faa_master/00305300013f2ef4/camera/image_raw', 'mjpeg_port': 8088, 'mjpeg_server': 'mjpeg_server_00305300013f2ef4'},
+                '00305300013f2ef5': {'image_topic': '/faa_master/00305300013f2ef5/camera/image_raw', 'mjpeg_port': 8082, 'mjpeg_server': 'mjpeg_server_00305300013f2ef5'},
+                '0030530001410997': {'image_topic': '/faa_slave1/0030530001410997/camera/image_raw', 'mjpeg_port': 8081, 'mjpeg_server': 'mjpeg_server_0030530001410997'},
+                '00305300013f2ef8': {'image_topic': '/faa_slave2/00305300013f2ef8/camera/image_raw', 'mjpeg_port': 8084, 'mjpeg_server': 'mjpeg_server_00305300013f2ef8'},
+                '00305300013f2ef9': {'image_topic': '/faa_slave2/00305300013f2ef9/camera/image_raw', 'mjpeg_port': 8080, 'mjpeg_server': 'mjpeg_server_00305300013f2ef9'},
+                '00305300013f2efb': {'image_topic': '/faa_master/00305300013f2efb/camera/image_raw', 'mjpeg_port': 8090, 'mjpeg_server': 'mjpeg_server_00305300013f2efb'},
+                '00305300013f2efa': {'image_topic': '/faa_master/00305300013f2efa/camera/image_raw', 'mjpeg_port': 8087, 'mjpeg_server': 'mjpeg_server_00305300013f2efa'},
+                '003053000140e715': {'image_topic': '/faa_slave1/003053000140e715/camera/image_raw', 'mjpeg_port': 8086, 'mjpeg_server': 'mjpeg_server_003053000140e715'},
+                '0030530001412079': {'image_topic': '/faa_slave2/0030530001412079/camera/image_raw', 'mjpeg_port': 8091, 'mjpeg_server': 'mjpeg_server_0030530001412079'}
+                }
+        create_mjpeg_server_launch(filename,mjpeg_info_dict)
+
+    if 0:
+        filename = 'camera.launch'
+        yaml_directory = './'
+        camera_assignment = faa_introspection.get_camera_assignment()
+        create_camera_yaml(directory=yaml_directory,camera_assignment=camera_assignment)
+        create_camera_launch(filename=filename,camera_assignment=camera_assignment)
+
+    if 0:
+        filename = 'camera_calibrator.launch'
+        image_topics = [
+                '/faa_slave2/camera_10/camera/image_raw',
+                '/faa_slave2/camera_12/camera/image_raw',
+                '/faa_slave1/camera_9/camera/image_raw',
+                '/faa_slave2/camera_7/camera/image_raw',
+                '/faa_slave2/camera_5/camera/image_raw',
+                '/faa_master/camera_8/camera/image_raw',
+                '/faa_master/camera_6/camera/image_raw',
+                '/faa_slave1/camera_1/camera/image_raw',
+                '/faa_slave1/camera_2/camera/image_raw',
+                '/faa_master/camera_11/camera/image_raw',
+                '/faa_master/camera_3/camera/image_raw',
+                '/faa_slave1/camera_4/camera/image_raw'
+                ]
+        chessboard_size = '8x6'
+        chessboard_square = '0.0254'
+        create_camera_calibrator_launch(filename,image_topics,chessboard_size,chessboard_square)
+
+    if 0:
+        filename = 'image_proc.launch'
+        create_image_proc_launch(filename)
+
+    if 0:
+        filename = 'homography_calibrator.launch'
+        create_homography_calibrator_launch(filename)
+
+    if 0:
+        filename = 'zoom_tool.launch'
+        create_zoom_tool_launch(filename)
+
+    if 0:
+        filename = 'transform_2d_calibrator.launch'
+        create_transform_2d_calibrator_launch(filename)
+
+    if 0:
+        filename = 'static_tf_publisher_2d.launch'
+        create_static_tf_publisher_2d_launch(filename)
+
+    if 1:
+        filename = 'three_point_tracker.launch'
+        create_three_point_tracker_launch(filename)
+
+    if 0:
+        filename = 'image_stitcher.launch'
+        create_image_stitcher_launch(filename)
+
+    if 0:
+        filename = 'stitched_image_labeler.launch'
+        create_stitched_image_labeler_launch(filename)
+
+    if 0:
+        filename = 'frame_skipper.launch'
+        create_frame_skipper_launch(filename)
+
+    if 0:
+        freq = 30.0
+        filename = 'frame_drop_corrector.launch'
+        create_frame_drop_corrector_launch(filename, freq)
+
+    if 0:
+        filename = 'avi_writer.launch'
+        create_avi_writer_launch(filename)
+
+    if 0:
+        filename = 'tracking_pts_logger.launch'
+        create_tracking_pts_logger_launch(filename)
+
+    if 1:
+        camera0 = 'camera_2'
+        camera1 = 'camera_5'
+        filename = 'frame_drop_test.launch'
+        create_frame_drop_test_launch(filename,camera0,camera1)
+
+
+
+
+
+

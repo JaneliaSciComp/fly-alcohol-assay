@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fly Alcohol Assay Calibration</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="pragma" content="no-cache">
+    <link rel="stylesheet" href="static/jquery-ui-1.9.2.custom.min.css?v=1" type="text/css" />
+    <link rel="stylesheet" href="static/style.css?v=5" type="text/css" />
+
+    <script type="text/javascript" src="/static/js/ros/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="/static/js/ros/roslib.min.js"></script>
+
+    <script type="text/javascript" src="/static/js/jquery/jquery-1.8.3.min.js"></script>
+    <!-- <script type="text/javascript" src="/static/js/jquery/jquery.imgareaselect.pack.js"></script> -->
+    <script type="text/javascript" src="/static/js/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="/static/js/sijax/sijax.js"></script>
+    <script type="text/javascript">
+      {{ g.sijax.get_js()|safe }}
+    </script>
+  </head>
+  
+  <body>
+    <div id="window">
+      <h1>Fly Alcohol Assay Calibration</h1>
+      <table id="tblCalibration">
+        <tr>
+          <td>
+            <span>Image Size: </span><span id="imageSizeDisplay"></span>
+          </td>
+          <td>
+            <span>Line Thickness: </span><span id="lineThicknessDisplay"></span>
+          </td>
+          <td>
+            <span>Tunnel Width: </span><span id="tunnelWidthDisplay"></span>
+          </td>
+          <td>
+          </td>
+          <td>
+            <button class="button" id="btnSave">Save</button>
+          </td>
+          <td>
+            <button class="button" id="btnRefresh">Refresh Parameters</button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="slider calibration" id="imageSizeSlider"></div>
+          </td>
+          <td>
+            <div class="slider calibration" id="lineThicknessSlider"></div>
+          </td>
+          <td>
+            <div class="slider calibration" id="tunnelWidthSlider"></div>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span>Tunnel Height: </span><span id="tunnelHeightDisplay"></span>
+          </td>
+          <td>
+            <span>Tunnel Y Offset: </span><span id="tunnelYOffsetDisplay"></span>
+          </td>
+          <td>
+            <span>Gate Height: </span><span id="gateHeightDisplay"></span>
+          </td>
+          <td>
+            <span>Gate Y Offset 0: </span><span id="gateYOffsetDisplay0"></span>
+          </td>
+          <td>
+            <span>Gate Y Offset 1: </span><span id="gateYOffsetDisplay1"></span>
+          </td>
+          <td>
+            <span>Gate Y Offset 2: </span><span id="gateYOffsetDisplay2"></span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="slider calibration" id="tunnelHeightSlider"></div>
+          </td>
+          <td>
+            <div class="slider calibration" id="tunnelYOffsetSlider"></div>
+          </td>
+          <td>
+            <div class="slider calibration" id="gateHeightSlider"></div>
+          </td>
+          <td>
+            <div class="slider calibration yOffset" id="gateYOffsetSlider0" data-gate="0"></div>
+          </td>
+          <td>
+            <div class="slider calibration yOffset" id="gateYOffsetSlider1" data-gate="1"></div>
+          </td>
+          <td>
+            <div class="slider calibration yOffset" id="gateYOffsetSlider2" data-gate="2"></div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span>Tunnel X Offset 0: </span><span id="tunnelXOffsetDisplay0"></span>
+          </td>
+          <td>
+            <span>Tunnel X Offset 1: </span><span id="tunnelXOffsetDisplay1"></span>
+          </td>
+          <td>
+            <span>Tunnel X Offset 2: </span><span id="tunnelXOffsetDisplay2"></span>
+          </td>
+          <td>
+            <span>Tunnel X Offset 3: </span><span id="tunnelXOffsetDisplay3"></span>
+          </td>
+          <td>
+            <span>Tunnel X Offset 4: </span><span id="tunnelXOffsetDisplay4"></span>
+          </td>
+          <td>
+            <span>Tunnel X Offset 5: </span><span id="tunnelXOffsetDisplay5"></span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="slider calibration xOffset" id="tunnelXOffsetSlider0" data-tunnel="0"></div>
+          </td>
+          <td>
+            <div class="slider calibration xOffset" id="tunnelXOffsetSlider1" data-tunnel="1"></div>
+          </td>
+          <td>
+            <div class="slider calibration xOffset" id="tunnelXOffsetSlider2" data-tunnel="2"></div>
+          </td>
+          <td>
+            <div class="slider calibration xOffset" id="tunnelXOffsetSlider3" data-tunnel="3"></div>
+          </td>
+          <td>
+            <div class="slider calibration xOffset" id="tunnelXOffsetSlider4" data-tunnel="4"></div>
+          </td>
+          <td>
+            <div class="slider calibration xOffset" id="tunnelXOffsetSlider5" data-tunnel="5"></div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="6">
+            <div id="mjpeg">
+              <img src="http://localhost:8080/stream?topic=/camera/image_processed" />
+            </div>
+            <script type="text/javascript" src="/static/js/scripts/calibrate.js"></script>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

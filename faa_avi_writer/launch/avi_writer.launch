@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="faa_avi_writer" type="avi_writer.py" name="faa_avi_writer" />
+</launch>

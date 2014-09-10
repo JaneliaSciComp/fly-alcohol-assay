@@ -1,0 +1,24 @@
+<package>
+  <description brief="faa_smach">
+
+     faa_smach
+
+  </description>
+  <author>Peter Polidoro</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/peterpolidoro/faa</url>
+  <depend package="rospy"/>
+  <depend package='smach'/>
+  <depend package='smach_ros'/>
+  <depend package='std_msgs'/>
+  <depend package='faa_utilities'/>
+  <depend package='faa_tracking_processing'/>
+  <depend package='faa_actuation'/>
+  <depend package='faa_actionlib'/>
+  <depend package='faa_status'/>
+  <depend package='faa_data_save'/>
+
+</package>
+
+

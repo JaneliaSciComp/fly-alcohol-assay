@@ -1,0 +1,5 @@
+int8 device
+int8 mfc
+int8 percent_capacity
+---
+string status

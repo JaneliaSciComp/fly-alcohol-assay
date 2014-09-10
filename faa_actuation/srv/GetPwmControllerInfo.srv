@@ -1,0 +1,4 @@
+---
+uint8 gate_open_servo_angle
+uint8 gate_close_servo_angle
+uint8 led_on_duty_cycle

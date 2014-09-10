@@ -1,0 +1,16 @@
+<package>
+  <description brief="faa_launch">
+
+     faa_launch
+
+  </description>
+  <author>Peter Polidoro</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/peterpolidoro/faa</url>
+  <depend package="camera_calibration"/>
+  <depend package="faa_status"/>
+
+</package>
+
+

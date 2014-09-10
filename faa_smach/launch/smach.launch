@@ -1,0 +1,4 @@
+<launch>
+  <rosparam ns="faa_experiment" file="$(env FAA_CONFIG)/faa_experiment/params.yaml"/>
+  <node ns="faa_experiments_smach" pkg="faa_smach" type="experiments_smach.py" name="faa_experiments_smach" />
+</launch>

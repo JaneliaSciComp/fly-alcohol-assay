@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Actuation</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <link rel="stylesheet" href="static/jquery-ui-1.9.2.custom.min.css?v=2" type="text/css" />
+    <link rel="stylesheet" href="static/style.css?v=52" type="text/css" />
+    <script type="text/javascript" src="/static/js/jquery/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="/static/js/sijax/sijax.js"></script>
+    <script type="text/javascript" src="/static/js/extras/prettyprint.js"></script>
+    <script type="text/javascript">
+      {{ g.sijax.get_js()|safe }}
+    </script>
+  </head>
+  
+  <body>
+    <div id="window" >
+      <div id="tabs" >
+        <ul>
+          <li><a href="#tabs-0">Hardware Info</a></li>
+          <li><a href="#tabs-1">Flow Rate Settings</a></li>
+          <li><a href="#tabs-2">Acclimation Settings</a></li>
+          <li><a href="#tabs-3">Ethanol Chamber Settings</a></li>
+          <li><a href="#tabs-4">Experiment Controls</a></li>
+          <!-- <li><a href="#tabs-1">Start Chamber Settings</a></li> -->
+          <!-- <li><a href="#tabs-2">Walk to Start Chamber Settings</a></li> -->
+          <!-- <li><a href="#tabs-3">Ethanol Chamber Settings</a></li> -->
+          <!-- <li><a href="#tabs-4">Walk to Ethanol Chamber Settings</a></li> -->
+        </ul>
+        <div id="tabs-0" >
+          <button class="button" id="btnInfo">Get Hardware Info</button>
+          <table id="tblInfo">
+            <tr class="rowInfo">
+              <td class="colInfo"><div class="info" id="infoDevice0"></div></td>
+              <td class="colInfo"><div class="info" id="infoDevice1"></div></td>
+              <td class="colInfo"><div class="info" id="infoDevice2"></div></td>
+            </tr>
+            <tr class="rowInfo">
+              <td class="colInfo"></div></td>
+              <td class="colInfo"><div class="info" id="infoDevice3"></div></td>
+              <td class="colInfo"></div></td>
+            </tr>
+          </table>
+        </div>
+        <div id="tabs-1" >
+          <div id="odor0FlowRateSettings" class="settings">
+            <p>
+              <h1>Odor 1</h1>
+              <label for="odor0Mfc0Display">MFC 1 Percent Capacity Setting:</label>
+              <span class="mfc display" id="odor0Mfc0Display"></span>
+              <div class="mfc slider" id="odor0Mfc0Slider"></div>
+              <label for="odor0Mfc1Display">MFC 2 Percent Capacity Setting:</label>
+              <span class="mfc display" id="odor0Mfc1Display"></span>
+              <div class="mfc slider" id="odor0Mfc1Slider"></div>
+            </p>
+          </div>
+          <div id="odor1FlowRateSettings" class="settings">
+            <p>
+              <h1>Odor 2</h1>
+              <label for="odor1Mfc0Display">MFC 1 Percent Capacity Setting:</label>
+              <span class="mfc display" id="odor1Mfc0Display"></span>
+              <div class="mfc slider" id="odor1Mfc0Slider"></div>
+              <label for="odor1Mfc1Display">MFC 2 Percent Capacity Setting:</label>
+              <span class="mfc display" id="odor1Mfc1Display"></span>
+              <div class="mfc slider" id="odor1Mfc1Slider"></div>
+            </p>
+          </div>
+          <div id="ethanolFlowRateSettings" class="settings">
+            <p>
+              <h1>Ethanol</h1>
+              <label for="ethanolMfc0Display">MFC 1 Percent Capacity Setting:</label>
+              <span class="mfc display" id="ethanolMfc0Display"></span>
+              <div class="mfc slider" id="ethanolMfc0Slider"></div>
+              <label for="ethanolMfc1Display">MFC 2 Percent Capacity Setting:</label>
+              <span class="mfc display" id="ethanolMfc1Display"></span>
+              <div class="mfc slider" id="ethanolMfc1Slider"></div>
+            </p>
+          </div>
+        </div>
+        <div id="tabs-2" >
+          <div class="settings">
+            <h1>Acclimation Time</h1>
+            <div class="acclimationSettings">
+              <span class="acclimation display" id="acclimationDisplay"></span>
+              <div class="acclimation slider" id="acclimationSlider"></div>
+            </div>
+          </div>
+        </div>
+        <div id="tabs-3" >
+          <div id="ethanolChamberAirBefore" class="settings">
+            <h1>Air Before</h1>
+            <div class="ethanolChamberSettings">
+              <span class="ethanolChamber display" id="ethanolChamberDisplayAirBefore"></span>
+              <div class="ethanolChamber slider" id="ethanolChamberSliderAirBefore"></div>
+            </div>
+          </div>
+          <div id="ethanolChamberEthanol" class="settings">
+            <h1>Ethanol</h1>
+            <div class="ethanolChamberSettings">
+              <div id="ethanolVialSelection">
+                <input type="radio" id="ethanolVial0" name="vialEthanol" value="0" /><label for="ethanolVial0">Vial 0 (Dummy)</label>
+                <input type="radio" id="ethanolVial1" name="vialEthanol" value="1" checked="checked" /><label for="ethanolVial1">Vial 1</label>
+                <input type="radio" id="ethanolVial2" name="vialEthanol" value="2" /><label for="ethanolVial2">Vial 2</label>
+                <input type="radio" id="ethanolVial3" name="vialEthanol" value="3" /><label for="ethanolVial3">Vial 3</label>
+                <input type="radio" id="ethanolVial4" name="vialEthanol" value="4" /><label for="ethanolVial4">Vial 4</label>
+                <input type="radio" id="ethanolVial5" name="vialEthanol" value="5" /><label for="ethanolVial5">Vial 5</label>
+                <input type="radio" id="ethanolVial6" name="vialEthanol" value="6" /><label for="ethanolVial6">Vial 6</label>
+                <input type="radio" id="ethanolVial7" name="vialEthanol" value="7" /><label for="ethanolVial7">Vial 7</label>
+              </div>
+            </div>
+            <div class="ethanolChamberSettings">
+              <span class="ethanolChamber display" id="ethanolChamberDisplayEthanol"></span>
+              <div class="ethanolChamber slider" id="ethanolChamberSliderEthanol"></div>
+            </div>
+          </div>
+          <div id="ethanolChamberAirAfter" class="settings">
+            <h1>Air After</h1>
+            <div class="ethanolChamberSettings">
+              <span class="ethanolChamber display" id="ethanolChamberDisplayAirAfter"></span>
+              <div class="ethanolChamber slider" id="ethanolChamberSliderAirAfter"></div>
+            </div>
+          </div>
+          <div id="ethanolChamberTotalTime" class="settings">
+            <h1>Total Time</h1>
+            <div class="ethanolChamberSettings">
+              <span class="ethanolChamber display" id="ethanolChamberDisplayTotalTime"></span>
+            </div>
+          </div>
+        </div>
+        <div id="tabs-4" >
+          <table id="tblStates">
+            <tr>
+              <td colspan="6"><button class="button" id="btnReset">Reset</button></td>
+            </tr>
+            <!-- <tr> -->
+            <!--   <td><button class="button ethanol btnRemoveFlies" id="btnRemoveFliesEthanol0" value="0"></button></td> -->
+            <!--   <td><button class="button ethanol btnRemoveFlies" id="btnRemoveFliesEthanol1" value="1"></button></td> -->
+            <!--   <td><button class="button ethanol btnRemoveFlies" id="btnRemoveFliesEthanol2" value="2"></button></td> -->
+            <!--   <td><button class="button ethanol btnRemoveFlies" id="btnRemoveFliesEthanol3" value="3"></button></td> -->
+            <!--   <td><button class="button ethanol btnRemoveFlies" id="btnRemoveFliesEthanol4" value="4"></button></td> -->
+            <!--   <td><button class="button ethanol btnRemoveFlies" id="btnRemoveFliesEthanol5" value="5"></button></td> -->
+            <!-- </tr> -->
+            <tr>
+              <td colspan="2"><span class="timer ethanol display" id="elapsedTimeDisplayAirBefore"></span></td>
+              <td colspan="2"><span class="timer ethanol display" id="elapsedTimeDisplayEthanol"></span></td>
+              <td colspan="2"><span class="timer ethanol display" id="elapsedTimeDisplayAirAfter"></div></td>
+            </tr>
+            <tr>
+              <td colspan="2"><div class="timer ethanol progressbar" id="elapsedTimeProgressbarAirBefore"></div></td>
+              <td colspan="2"><div class="timer ethanol progressbar" id="elapsedTimeProgressbarEthanol"></div></td>
+              <td colspan="2"><div class="timer ethanol progressbar" id="elapsedTimeProgressbarAirAfter"></div></td>
+            </tr>
+            <tr>
+              <td colspan="6"><span class="timer ethanol display" id="elapsedTimeDisplayEthanolTotal"></span></td>
+            </tr>
+            <tr>
+              <td colspan="6"><div class="timer ethanol progressbar" id="elapsedTimeProgressbarEthanolTotal"></div></td>
+            </tr>
+            <tr>
+              <td colspan="6"><button class="button ethanol" id="btnEthanolReady">All Ethanol Chambers Ready</button></td>
+            </tr>
+            <tr>
+              <td><button class="button ethanol btnWait" id="btnWaitEthanol0" value="0"></button></td>
+              <td><button class="button ethanol btnWait" id="btnWaitEthanol1" value="1"></button></td>
+              <td><button class="button ethanol btnWait" id="btnWaitEthanol2" value="2"></button></td>
+              <td><button class="button ethanol btnWait" id="btnWaitEthanol3" value="3"></button></td>
+              <td><button class="button ethanol btnWait" id="btnWaitEthanol4" value="4"></button></td>
+              <td><button class="button ethanol btnWait" id="btnWaitEthanol5" value="5"></button></td>
+            </tr>
+            <tr>
+              <td><button class="button ethanol btnReopen" id="btnReopenEthanol0" value="0"></button></td>
+              <td><button class="button ethanol btnReopen" id="btnReopenEthanol1" value="1"></button></td>
+              <td><button class="button ethanol btnReopen" id="btnReopenEthanol2" value="2"></button></td>
+              <td><button class="button ethanol btnReopen" id="btnReopenEthanol3" value="3"></button></td>
+              <td><button class="button ethanol btnReopen" id="btnReopenEthanol4" value="4"></button></td>
+              <td><button class="button ethanol btnReopen" id="btnReopenEthanol5" value="5"></button></td>
+            </tr>
+            <tr>
+              <td colspan="6"><button class="button ethanol btnWalk" id="btnWalkEthanol">Walk to Ethanol Chambers</button></td>
+            </tr>
+            <tr>
+              <td><span class="timer walk display">Walk Time 1</span></td>
+              <td><span class="timer walk display">Walk Time 2</span></td>
+              <td><span class="timer walk display">Walk Time 3</span></td>
+              <td><span class="timer walk display">Walk Time 4</span></td>
+              <td><span class="timer walk display">Walk Time 5</span></td>
+              <td><span class="timer walk display">Walk Time 6</span></td>
+            </tr>
+            <tr>
+              <td><span class="timer walk display" id="elapsedTimeDisplayWalk0" value="0"></span></td>
+              <td><span class="timer walk display" id="elapsedTimeDisplayWalk1" value="1"></span></td>
+              <td><span class="timer walk display" id="elapsedTimeDisplayWalk2" value="2"></span></td>
+              <td><span class="timer walk display" id="elapsedTimeDisplayWalk3" value="3"></span></td>
+              <td><span class="timer walk display" id="elapsedTimeDisplayWalk4" value="4"></span></td>
+              <td><span class="timer walk display" id="elapsedTimeDisplayWalk5" value="5"></span></td>
+            </tr>
+            <tr>
+              <td colspan="6"><button class="button start btnWalk" id="btnWalkStart">Walk to Start Chambers</button></td>
+            </tr>
+            <tr>
+              <td><button class="button start btnReopen" id="btnReopenStart0" value="0"></button></td>
+              <td><button class="button start btnReopen" id="btnReopenStart1" value="1"></button></td>
+              <td><button class="button start btnReopen" id="btnReopenStart2" value="2"></button></td>
+              <td><button class="button start btnReopen" id="btnReopenStart3" value="3"></button></td>
+              <td><button class="button start btnReopen" id="btnReopenStart4" value="4"></button></td>
+              <td><button class="button start btnReopen" id="btnReopenStart5" value="5"></button></td>
+            </tr>
+            <tr>
+              <td><button class="button start btnWait" id="btnWaitStart0" value="0"></button></td>
+              <td><button class="button start btnWait" id="btnWaitStart1" value="1"></button></td>
+              <td><button class="button start btnWait" id="btnWaitStart2" value="2"></button></td>
+              <td><button class="button start btnWait" id="btnWaitStart3" value="3"></button></td>
+              <td><button class="button start btnWait" id="btnWaitStart4" value="4"></button></td>
+              <td><button class="button start btnWait" id="btnWaitStart5" value="5"></button></td>
+            </tr>
+            <tr>
+              <td colspan="6"><button class="button start" id="btnStartReady">All Start Chambers Ready</button></td>
+            </tr>
+            <tr>
+              <td colspan="1"><span class="timer start display">Wait Time Limit:</span></td>
+              <td colspan="1"><div class="timer start slider" id="waitTimeSliderStart"></div></td>
+              <td colspan="1"><span class="timer start display" id="waitTimeDisplayStart"></span></td>
+              <td colspan="1"><span class="timer start display">Elapsed Time Waiting in Start Chambers:</span></td>
+              <td colspan="1"><span class="timer start display" id="elapsedTimeDisplayStart"></span></td>
+              <td colspan="1"><div class="timer start progressbar" id="elapsedTimeProgressbarStart"></div></td>
+            </tr>
+            <tr>
+              <td colspan="3"><button class="button acclimate" id="btnEndAcclimation">End Acclimation Early</button></td>
+              <td colspan="1"><span class="timer acclimate display">Elapsed Acclimation Time:</span></td>
+              <td colspan="1"><span class="timer acclimate display" id="elapsedTimeDisplayAcclimation"></span></td>
+              <td colspan="1"><div class="timer acclimate progressbar" id="elapsedTimeProgressbarAcclimation"></div></td>
+            </tr>
+            <tr>
+              <td colspan="6"><button class="button acclimate" id="btnAcclimateFlies">Acclimate Flies</button></td>
+            </tr>
+            <tr>
+              <td colspan="6"><button class="button" id="btnLoadFlies">Load Flies</button></td>
+            </tr>
+          </table>
+        </div>
+        <!-- <div id="tabs-1" > -->
+        <!-- </div> -->
+        <!-- <div id="tabs-2" > -->
+        <!--   <div id="odor0VialSelectionWalkEthanol" class="settings"> -->
+        <!--     <h1>Odor 1</h1> -->
+        <!--     <input type="radio" id="odor0VialsOffWalkEthanol" name="vialOdor0WalkEthanol" value="-1" /><label for="odor0VialsOffWalkEthanol">All Valves Off</label> -->
+        <!--     <input type="radio" id="odor0Vial0WalkEthanol" name="vialOdor0WalkEthanol" value="0" checked="checked" /><label for="odor0Vial0WalkEthanol">Vial 0 (Dummy)</label> -->
+        <!--     <input type="radio" id="odor0Vial1WalkEthanol" name="vialOdor0WalkEthanol" value="1" /><label for="odor0Vial1WalkEthanol">Vial 1</label> -->
+        <!--     <input type="radio" id="odor0Vial2WalkEthanol" name="vialOdor0WalkEthanol" value="2" /><label for="odor0Vial2WalkEthanol">Vial 2</label> -->
+        <!--     <input type="radio" id="odor0Vial3WalkEthanol" name="vialOdor0WalkEthanol" value="3" /><label for="odor0Vial3WalkEthanol">Vial 3</label> -->
+        <!--     <input type="radio" id="odor0Vial4WalkEthanol" name="vialOdor0WalkEthanol" value="4" /><label for="odor0Vial4WalkEthanol">Vial 4</label> -->
+        <!--     <input type="radio" id="odor0Vial5WalkEthanol" name="vialOdor0WalkEthanol" value="5" /><label for="odor0Vial5WalkEthanol">Vial 5</label> -->
+        <!--     <input type="radio" id="odor0Vial6WalkEthanol" name="vialOdor0WalkEthanol" value="6" /><label for="odor0Vial6WalkEthanol">Vial 6</label> -->
+        <!--     <input type="radio" id="odor0Vial7WalkEthanol" name="vialOdor0WalkEthanol" value="7" /><label for="odor0Vial7WalkEthanol">Vial 7</label> -->
+        <!--     <p> -->
+        <!--       <label for="odor0mfc0DisplayWalkEthanol">MFC 1 Percent Capacity Setting:</label> -->
+        <!--       <span class="mfc display" id="odor0mfc0DisplayWalkEthanol"></span> -->
+        <!--       <div class="mfc slider" id="odor0mfc0sliderWalkEthanol"></div> -->
+        <!--       <label for="odor0mfc1DisplayWalkEthanol">MFC 2 Percent Capacity Setting:</label> -->
+        <!--       <span class="mfc display" id="odor0mfc1DisplayWalkEthanol"></span> -->
+        <!--       <div class="mfc slider" id="odor0mfc1SliderWalkEthanol"></div> -->
+        <!--     </p> -->
+        <!--   </div> -->
+        <!--   <div id="odor1VialSelectionWalkEthanol" class="settings"> -->
+        <!--     <h1>Odor 2</h1> -->
+        <!--     <input type="radio" id="odor1VialsOffWalkEthanol" name="vialOdor1WalkEthanol" value="-1" /><label for="odor1VialsOffWalkEthanol">All Valves Off</label> -->
+        <!--     <input type="radio" id="odor1Vial0WalkEthanol" name="vialOdor1WalkEthanol" value="0" checked="checked" /><label for="odor1Vial0WalkEthanol">Vial 0 (Dummy)</label> -->
+        <!--     <input type="radio" id="odor1Vial1WalkEthanol" name="vialOdor1WalkEthanol" value="1" /><label for="odor1Vial1WalkEthanol">Vial 1</label> -->
+        <!--     <input type="radio" id="odor1Vial2WalkEthanol" name="vialOdor1WalkEthanol" value="2" /><label for="odor1Vial2WalkEthanol">Vial 2</label> -->
+        <!--     <input type="radio" id="odor1Vial3WalkEthanol" name="vialOdor1WalkEthanol" value="3" /><label for="odor1Vial3WalkEthanol">Vial 3</label> -->
+        <!--     <input type="radio" id="odor1Vial4WalkEthanol" name="vialOdor1WalkEthanol" value="4" /><label for="odor1Vial4WalkEthanol">Vial 4</label> -->
+        <!--     <input type="radio" id="odor1Vial5WalkEthanol" name="vialOdor1WalkEthanol" value="5" /><label for="odor1Vial5WalkEthanol">Vial 5</label> -->
+        <!--     <input type="radio" id="odor1Vial6WalkEthanol" name="vialOdor1WalkEthanol" value="6" /><label for="odor1Vial6WalkEthanol">Vial 6</label> -->
+        <!--     <input type="radio" id="odor1Vial7WalkEthanol" name="vialOdor1WalkEthanol" value="7" /><label for="odor1Vial7WalkEthanol">Vial 7</label> -->
+        <!--     <p> -->
+        <!--       <label for="odor1mfc0DisplayWalkEthanol">MFC 1 Percent Capacity Setting:</label> -->
+        <!--       <span class="mfc display" id="odor1mfc0DisplayWalkEthanol"></span> -->
+        <!--       <div class="mfc slider" id="odor1mfc0SliderWalkEthanol"></div> -->
+        <!--       <label for="odor1mfc1DisplayWalkEthanol">MFC 2 Percent Capacity Setting:</label> -->
+        <!--       <span class="mfc display" id="odor1mfc1DisplayWalkEthanol"></span> -->
+        <!--       <div class="mfc slider" id="odor1mfc1SliderWalkEthanol"></div> -->
+        <!--     </p> -->
+        <!--   </div> -->
+        <!-- </div> -->
+        <!-- <div id="tabs-3" > -->
+        <!--   <div id="ethanolVialSelection" class="settings"> -->
+        <!--     <h1>Ethanol</h1> -->
+        <!--     <input type="radio" id="ethanolVial0" name="vialEthanol" value="0" /><label for="ethanolVial0">Vial 0 (Dummy)</label> -->
+        <!--     <input type="radio" id="ethanolVial1" name="vialEthanol" value="1" checked="checked" /><label for="ethanolVial1">Vial 1</label> -->
+        <!--     <input type="radio" id="ethanolVial2" name="vialEthanol" value="2" /><label for="ethanolVial2">Vial 2</label> -->
+        <!--     <input type="radio" id="ethanolVial3" name="vialEthanol" value="3" /><label for="ethanolVial3">Vial 3</label> -->
+        <!--     <input type="radio" id="ethanolVial4" name="vialEthanol" value="4" /><label for="ethanolVial4">Vial 4</label> -->
+        <!--     <input type="radio" id="ethanolVial5" name="vialEthanol" value="5" /><label for="ethanolVial5">Vial 5</label> -->
+        <!--     <input type="radio" id="ethanolVial6" name="vialEthanol" value="6" /><label for="ethanolVial6">Vial 6</label> -->
+        <!--     <input type="radio" id="ethanolVial7" name="vialEthanol" value="7" /><label for="ethanolVial7">Vial 7</label> -->
+        <!--     <p> -->
+        <!--       <p><div class="timepicker" id="ethanoltime0"></div></p> -->
+        <!--       <label for="ethanolmfc0sliderValue">MFC 1 Percent Capacity Setting:</label> -->
+        <!--       <span class="mfc display" id="ethanolmfc0display"></span> -->
+        <!--       <div class="mfc slider" id="ethanolmfc0slider"></div> -->
+        <!--       <label for="ethanolmfc1sliderValue">MFC 2 Percent Capacity Setting:</label> -->
+        <!--       <span class="mfc display" id="ethanolmfc1display"></span> -->
+        <!--       <div class="mfc slider" id="ethanolmfc1slider"></div> -->
+        <!--     </p> -->
+        <!--   </div> -->
+        <!-- </div> -->
+        <!-- <div id="tabs-4" > -->
+        <!--   <div id="odor0VialSelectionWalkStart" class="settings"> -->
+        <!--     <h1>Odor 1</h1> -->
+        <!--     <input type="radio" id="odor0VialsOffWalkStart" name="vialOdor0WalkStart" value="-1" /><label for="odor0VialsOffWalkStart">All Valves Off</label> -->
+        <!--     <input type="radio" id="odor0Vial0WalkStart" name="vialOdor0WalkStart" value="0" checked="checked" /><label for="odor0Vial0WalkStart">Vial 0 (Dummy)</label> -->
+        <!--     <input type="radio" id="odor0Vial1WalkStart" name="vialOdor0WalkStart" value="1" /><label for="odor0Vial1WalkStart">Vial 1</label> -->
+        <!--     <input type="radio" id="odor0Vial2WalkStart" name="vialOdor0WalkStart" value="2" /><label for="odor0Vial2WalkStart">Vial 2</label> -->
+        <!--     <input type="radio" id="odor0Vial3WalkStart" name="vialOdor0WalkStart" value="3" /><label for="odor0Vial3WalkStart">Vial 3</label> -->
+        <!--     <input type="radio" id="odor0Vial4WalkStart" name="vialOdor0WalkStart" value="4" /><label for="odor0Vial4WalkStart">Vial 4</label> -->
+        <!--     <input type="radio" id="odor0Vial5WalkStart" name="vialOdor0WalkStart" value="5" /><label for="odor0Vial5WalkStart">Vial 5</label> -->
+        <!--     <input type="radio" id="odor0Vial6WalkStart" name="vialOdor0WalkStart" value="6" /><label for="odor0Vial6WalkStart">Vial 6</label> -->
+        <!--     <input type="radio" id="odor0Vial7WalkStart" name="vialOdor0WalkStart" value="7" /><label for="odor0Vial7WalkStart">Vial 7</label> -->
+        <!--     <p> -->
+        <!--       <label for="odor0mfc0DisplayWalkStart">MFC 1 Percent Capacity Setting:</label> -->
+        <!--       <span class="mfc display" id="odor0mfc0DisplayWalkStart"></span> -->
+        <!--       <div class="mfc slider" id="odor0mfc0sliderWalkStart"></div> -->
+        <!--       <label for="odor0mfc1DisplayWalkStart">MFC 2 Percent Capacity Setting:</label> -->
+        <!--       <span class="mfc display" id="odor0mfc1DisplayWalkStart"></span> -->
+        <!--       <div class="mfc slider" id="odor0mfc1SliderWalkStart"></div> -->
+        <!--     </p> -->
+        <!--   </div> -->
+        <!--   <div id="odor1VialSelectionWalkStart" class="settings"> -->
+        <!--     <h1>Odor 2</h1> -->
+        <!--     <input type="radio" id="odor1vialsOffWalkStart" name="vialOdor1WalkStart" value="-1" /><label for="odor1vialsOffWalkStart">All Valves Off</label> -->
+        <!--     <input type="radio" id="odor1vial0WalkStart" name="vialOdor1WalkStart" value="0" checked="checked" /><label for="odor1vial0WalkStart">Vial 0 (Dummy)</label> -->
+        <!--     <input type="radio" id="odor1vial1WalkStart" name="vialOdor1WalkStart" value="1" /><label for="odor1vial1WalkStart">Vial 1</label> -->
+        <!--     <input type="radio" id="odor1vial2WalkStart" name="vialOdor1WalkStart" value="2" /><label for="odor1vial2WalkStart">Vial 2</label> -->
+        <!--     <input type="radio" id="odor1vial3WalkStart" name="vialOdor1WalkStart" value="3" /><label for="odor1vial3WalkStart">Vial 3</label> -->
+        <!--     <input type="radio" id="odor1vial4WalkStart" name="vialOdor1WalkStart" value="4" /><label for="odor1vial4WalkStart">Vial 4</label> -->
+        <!--     <input type="radio" id="odor1vial5WalkStart" name="vialOdor1WalkStart" value="5" /><label for="odor1vial5WalkStart">Vial 5</label> -->
+        <!--     <input type="radio" id="odor1vial6WalkStart" name="vialOdor1WalkStart" value="6" /><label for="odor1vial6WalkStart">Vial 6</label> -->
+        <!--     <input type="radio" id="odor1vial7WalkStart" name="vialOdor1WalkStart" value="7" /><label for="odor1vial7WalkStart">Vial 7</label> -->
+        <!--     <p> -->
+        <!--       <label for="odor1mfc0DisplayWalkStart">MFC 1 Percent Capacity Setting:</label> -->
+        <!--       <span class="mfc display" id="odor1mfc0DisplayWalkStart"></span> -->
+        <!--       <div class="mfc slider" id="odor1mfc0SliderWalkStart"></div> -->
+        <!--       <label for="odor1mfc1DisplayWalkStart">MFC 2 Percent Capacity Setting:</label> -->
+        <!--       <span class="mfc display" id="odor1mfc1DisplayWalkStart"></span> -->
+        <!--       <div class="mfc slider" id="odor1mfc1SliderWalkStart"></div> -->
+        <!--     </p> -->
+        <!--   </div> -->
+        <!-- </div> -->
+      </div>
+    </div>
+    <script type="text/javascript" src="/static/js/actuation/script.js"></script>
+  </body>
+</html>

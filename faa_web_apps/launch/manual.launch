@@ -1,0 +1,7 @@
+<launch>
+    <node pkg="mjpeg_server" type="mjpeg_server" name="mjpeg_server" />
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
+    <arg name="hardware" default="true"/>
+    <node pkg="faa_web_apps" type="manual.py" name="faa_manual_control" />
+    <include file="$(find faa_utilities)/launch/utilities.launch" />
+</launch>

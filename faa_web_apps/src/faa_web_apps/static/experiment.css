@@ -1,0 +1,91 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+html, body {
+    margin:0;
+    padding:0;
+    height:100%;
+    border:none;
+}
+#window {
+    background-color: rgb(255,0,0);
+    height: 100%;
+}
+#tabs {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+#tblInfo {
+    width: 100%;
+}
+.colInfo {
+    text-align: left;
+    width: 33%;
+}
+#btnInfo {
+    max-height: 4em;
+}
+.info {
+    font-weight: bolder;
+}
+#tblExperimentControls {
+    width: 100%;
+    height: 100%;
+}
+td {
+    padding: 0 0.5em;
+    text-align: center;
+}
+th {
+    color: #000000;
+    font-size:2em;
+    font-weight:bold;
+}
+.button {
+    width: 100%;
+    height: 100%;
+    font-size:2em;
+    font-weight:bold;
+}
+.display {
+    color:#000000;
+    font-size:1em;
+    font-weight:bold;
+}
+.settings {
+    padding: 0.5em;
+}
+.ui-button-text-only {
+    padding: 0.1em 0.2em !important;
+}
+.mfc.slider {
+    max-width: 20em;
+}
+.acclimationSettings {
+    padding: 1em;
+}
+#tblImageProcessing {
+    width: 100%;
+}
+#btnSetExperimentName {
+    max-height: 4em;
+    max-width: 4em;
+}
+.slider.experimentSetting {
+    max-width: 50em;
+}
+.indent {
+    padding: 0.1em 4em;
+}
+.center {
+    text-align: center;
+    margin: 2em 0em;
+}
+#btnEndChamberLightsEnable {
+    width: 30%;
+}
+#btnEndChamberLightsDisable {
+    width: 30%;
+}

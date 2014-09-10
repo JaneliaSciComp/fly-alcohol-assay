@@ -1,0 +1,6 @@
+<launch>
+  <arg name="reusing_bg_images" default="false"/>
+  <node ns="faa_actionlib" pkg="faa_actionlib" type="actionlib_server.py" name="faa_actionlib_server" >
+    <param name="reusing_bg_images" value="$(arg reusing_bg_images)"/>
+  </node>
+</launch>

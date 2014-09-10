@@ -1,0 +1,9 @@
+<stack>
+  <description brief="faa">Fly Alcohol Assay</description>
+  <author>Maintained by Peter Polidoro</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/peterpolidoro/faa</url>
+  <depend stack="ros" />
+
+</stack>

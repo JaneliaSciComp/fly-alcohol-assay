@@ -1,0 +1,7 @@
+<launch>
+    <arg name="hardware" default="true"/>
+    <include file="$(find faa_actuation)/launch/actuation.launch" >
+      <arg name="hardware" value="$(arg hardware)"/>
+    </include>
+    <include file="$(find faa_manual_control)/launch/manual_control.launch" />
+</launch>

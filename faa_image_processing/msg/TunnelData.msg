@@ -1,0 +1,14 @@
+int8 tunnel
+bool enabled
+float64 fly_x
+float64 fly_y
+float64 fly_angle
+string chamber
+string gate0
+string gate1
+string gate2
+float64 blob_x
+float64 blob_y
+float64 blob_area
+float64 blob_slope
+float64 blob_ecc

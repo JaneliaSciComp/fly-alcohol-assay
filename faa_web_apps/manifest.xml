@@ -1,0 +1,44 @@
+<package>
+  <description brief="faa_web_apps">
+
+     faa_camera_assignment
+
+  </description>
+  <author>Peter Polidoro</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/peterpolidoro/faa</url>
+  <depend package="rospy"/>
+  <depend package="mjpeg_server"/>
+  <depend package="faa_utilities"/>
+  <!-- <depend package="rosbridge_suite"/> -->
+
+  <!-- <depend package="faa_camera_tools"/> -->
+  <!-- <depend package="faa_utilities"/> -->
+  <!-- <depend package="faa_introspection"/> -->
+  <!-- <depend package="faa_camera_calibrator"/> -->
+  <!-- <depend package="faa_homography"/> -->
+  <!-- <depend package="faa_zoom_tool"/> -->
+  <!-- <depend package="faa_transform_2d"/> -->
+  <!-- <depend package="faa_camera_trigger"/> -->
+  <!-- <depend package="faa_frame_drop_corrector" /> -->
+  <!-- <depend package="faa_frame_skipper"/> -->
+  <!-- <depend package="faa_image_stitcher"/> -->
+  <!-- <depend package="faa_tracking_2d"/> -->
+  <!-- <depend package="faa_avi_writer"/> -->
+  <!-- <depend package="faa_logging" /> -->
+  <!-- <depend package="faa_watchdog" /> -->
+  <!-- <depend package="faa_logging" /> -->
+  <!-- <depend package="faa_light_control" /> -->
+
+  <!-- <rosdep name="setuptools"/> -->
+  <!-- <rosdep name="werkzeug"/> -->
+  <!-- <rosdep name="flask" /> -->
+  <!-- <rosdep name="flask_sijax"/> -->
+  <!-- <rosdep name="redis_server"/> -->
+  <!-- <rosdep name="python_redis"/> -->
+  <!-- <rosdep name="python_netifaces"/> -->
+
+</package>
+
+

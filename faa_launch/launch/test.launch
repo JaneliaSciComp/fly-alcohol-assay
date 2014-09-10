@@ -1,0 +1,6 @@
+<launch>
+    <include file="$(find faa_camera)/launch/camera.launch" />
+    <include file="$(find faa_image_processing)/launch/image_processing.launch" />
+    <include file="$(find faa_web_apps)/launch/calibrate.launch" />
+    <!-- <include file="$(find faa_web_apps)/launch/view_images.launch" /> -->
+</launch>

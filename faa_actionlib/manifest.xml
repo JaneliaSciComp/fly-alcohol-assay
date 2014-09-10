@@ -1,0 +1,21 @@
+<package>
+  <description brief="faa_actionlib">
+
+     faa_actionlib
+
+  </description>
+  <author>Peter Polidoro</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://bitbucket.org/peterpolidoro/faa</url>
+  <depend package="rospy"/>
+  <depend package='actionlib'/>
+  <!-- <depend package='actionlib_ros'/> -->
+  <!-- <depend package='std_msgs'/> -->
+  <depend package='faa_image_processing'/>
+  <depend package='faa_actuation'/>
+  <depend package='faa_status'/>
+
+</package>
+
+
