@@ -3,6 +3,9 @@ fly-alcohol-assay
 
 The code to control the Janelia fly alcohol assay (FlyBar).
 
+Authors:
+Peter Polidoro polidorop@janelia.hhmi.org
+
 
 Running
 =======
@@ -66,12 +69,7 @@ Open a terminal and run::
 
 Open a terminal and run::
 
-    sudo apt-get install mercurial -y
-    mkdir ~/mercurial
-    hg clone https://bitbucket.org/peterpolidoro/homedir_server ~/mercurial/homedir_server
-    cd ~/mercurial/homedir_server
-    python aptgetinstall.py
-    python homedirsetup.py
+    sudo apt-get install git -y
     sudo apt-get install gparted -y
     sudo gparted
 
@@ -152,12 +150,12 @@ Open a terminal and run::
     mkdir ~/ros
     rosws init ~/ros/faa_ws /opt/ros/groovy
     source ~/ros/faa_ws/setup.bash
-    rosws set faa --hg https://bitbucket.org/peterpolidoro/faa
-    rosws set faa_config --hg https://bitbucket.org/peterpolidoro/faa_config
+    rosws set faa --git https://github.com/JaneliaSciComp/fly-alcohol-assay.git
+    rosws set faa_config --git https://github.com/JaneliaSciComp/fly-alcohol-assay-config.git
     rosws update
-    python ~/ros/faa_ws/faa_config/bash_setup.py
+    python ~/ros/faa_ws/fly-alchol-assay-config/bash_setup.py
     source ~/.bashrc
-    python ~/ros/faa_ws/faa/install.py
+    python ~/ros/faa_ws/fly-alcohol-assay/install.py
 
 Install Extra ROS Pacakges (manually for now, automatically in the future)
 --------------------------------------------------------------------------
@@ -225,19 +223,3 @@ Open a terminal and run::
     cd ~/ros/faa_ws/faa
     hg pull -u
     rosmake faa
-
-
-Author: Peter Polidoro
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
