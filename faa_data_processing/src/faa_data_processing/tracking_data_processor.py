@@ -259,25 +259,27 @@ class TrackingDataProcessor(object):
                                                            usemask=False)
 
         air_before_data = raw_chamber_data[raw_chamber_data['status']=='AirBefore']
-        analyzed_air_before_data = self.analyze_data(air_before_data)
-        status_array = numpy.array(['AirBefore']*len(analyzed_air_before_data),dtype='|S25')
-        analyzed_air_before_data = recfunctions.append_fields(analyzed_air_before_data,
-                                                              'status',
-                                                              status_array,
-                                                              dtypes='|S25',
-                                                              usemask=False)
-        analyzed_chamber_data = recfunctions.stack_arrays((analyzed_air_before_data,analyzed_chamber_data),usemask=False)
+        if air_before_data.size != 0:
+            analyzed_air_before_data = self.analyze_data(air_before_data)
+            status_array = numpy.array(['AirBefore']*len(analyzed_air_before_data),dtype='|S25')
+            analyzed_air_before_data = recfunctions.append_fields(analyzed_air_before_data,
+                                                                  'status',
+                                                                  status_array,
+                                                                  dtypes='|S25',
+                                                                  usemask=False)
+            analyzed_chamber_data = recfunctions.stack_arrays((analyzed_air_before_data,analyzed_chamber_data),usemask=False)
 
 
         air_after_data = raw_chamber_data[raw_chamber_data['status']=='AirAfter']
-        analyzed_air_after_data = self.analyze_data(air_after_data)
-        status_array = numpy.array(['AirAfter']*len(analyzed_air_after_data),dtype='|S25')
-        analyzed_air_after_data = recfunctions.append_fields(analyzed_air_after_data,
-                                                              'status',
-                                                              status_array,
-                                                              dtypes='|S25',
-                                                              usemask=False)
-        analyzed_chamber_data = recfunctions.stack_arrays((analyzed_chamber_data,analyzed_air_after_data),usemask=False)
+        if air_after_data.size != 0:
+            analyzed_air_after_data = self.analyze_data(air_after_data)
+            status_array = numpy.array(['AirAfter']*len(analyzed_air_after_data),dtype='|S25')
+            analyzed_air_after_data = recfunctions.append_fields(analyzed_air_after_data,
+                                                                  'status',
+                                                                  status_array,
+                                                                  dtypes='|S25',
+                                                                  usemask=False)
+            analyzed_chamber_data = recfunctions.stack_arrays((analyzed_chamber_data,analyzed_air_after_data),usemask=False)
 
         return analyzed_chamber_data
 
@@ -325,14 +327,15 @@ class TrackingDataProcessor(object):
                                                              usemask=False)
 
         air_before_data = analyzed_chamber_data[analyzed_chamber_data['status']=='AirBefore']
-        summarized_air_before_data = self.summarize_data(air_before_data)
-        status_array = numpy.array(['AirBefore']*len(summarized_air_before_data),dtype='|S25')
-        summarized_air_before_data = recfunctions.append_fields(summarized_air_before_data,
-                                                                'status',
-                                                                status_array,
-                                                                dtypes='|S25',
-                                                                usemask=False)
-        summarized_chamber_data = recfunctions.stack_arrays((summarized_chamber_data,summarized_air_before_data),usemask=False)
+        if air_before_data.size != 0:
+            summarized_air_before_data = self.summarize_data(air_before_data)
+            status_array = numpy.array(['AirBefore']*len(summarized_air_before_data),dtype='|S25')
+            summarized_air_before_data = recfunctions.append_fields(summarized_air_before_data,
+                                                                    'status',
+                                                                    status_array,
+                                                                    dtypes='|S25',
+                                                                    usemask=False)
+            summarized_chamber_data = recfunctions.stack_arrays((summarized_chamber_data,summarized_air_before_data),usemask=False)
 
         ethanol_data = analyzed_chamber_data[analyzed_chamber_data['status']=='Ethanol']
         summarized_ethanol_data = self.summarize_data(ethanol_data)
@@ -345,14 +348,15 @@ class TrackingDataProcessor(object):
         summarized_chamber_data = recfunctions.stack_arrays((summarized_chamber_data,summarized_ethanol_data),usemask=False)
 
         air_after_data = analyzed_chamber_data[analyzed_chamber_data['status']=='AirAfter']
-        summarized_air_after_data = self.summarize_data(air_after_data)
-        status_array = numpy.array(['AirAfter']*len(summarized_air_after_data),dtype='|S25')
-        summarized_air_after_data = recfunctions.append_fields(summarized_air_after_data,
-                                                               'status',
-                                                               status_array,
-                                                               dtypes='|S25',
-                                                               usemask=False)
-        summarized_chamber_data = recfunctions.stack_arrays((summarized_chamber_data,summarized_air_after_data),usemask=False)
+        if air_after_data.size != 0:
+            summarized_air_after_data = self.summarize_data(air_after_data)
+            status_array = numpy.array(['AirAfter']*len(summarized_air_after_data),dtype='|S25')
+            summarized_air_after_data = recfunctions.append_fields(summarized_air_after_data,
+                                                                   'status',
+                                                                   status_array,
+                                                                   dtypes='|S25',
+                                                                   usemask=False)
+            summarized_chamber_data = recfunctions.stack_arrays((summarized_chamber_data,summarized_air_after_data),usemask=False)
 
         return summarized_chamber_data
 
