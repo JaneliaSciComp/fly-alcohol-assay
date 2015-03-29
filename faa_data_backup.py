@@ -8,11 +8,11 @@ Created on Wed Feb 25 20:08:54 2015
 Simple convenience script that automates the following processes:
 
 Partial Backup (For fast data analysis and transfer)
-A1) Run "faa -p ~/faa_data_directory -t" on data in a experiment day folder
+A1) Run "faa -p ~/faa_data_directory -t -o" on data in a experiment day folder
 A2) Transfer of folder directory onto mapped network drive (in our case the Synology server)
 
 Full Backup (Go through the full analysis, bag compression, and transfer)
-B1) Running "faa -p ~/faa_data/directory -f" on data in a folder
+B1) Running "faa -p ~/faa_data/directory -f -o" on data in a folder
 B2) Running of "rosbag compress ~/faa_data/directory/*/*/*.bag" on data for a chosen day
 B3) Transfer of chosen folder directory onto mapped network drive while ignoring uncompressed *.orig.bag files
 
