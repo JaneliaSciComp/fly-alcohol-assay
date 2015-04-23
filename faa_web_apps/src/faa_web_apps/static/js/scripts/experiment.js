@@ -932,9 +932,9 @@ $(function() {
     $('#endChamberSliderLightsDurationOn').slider({
         range: "min",
         value: 0,
-        min: 10,
+        min: 1,
         max: 100,
-        step: 10,
+        step: 1,
         // min: 100,
         // max: 10000,
         // step: 100,
@@ -952,9 +952,9 @@ $(function() {
     $('#endChamberSliderLightsDurationOff').slider({
         range: "min",
         value: 0,
-        min: 10,
+        min: 1,
         max: 100,
-        step: 10,
+        step: 1,
         // min: 100,
         // max: 10000,
         // step: 100,
