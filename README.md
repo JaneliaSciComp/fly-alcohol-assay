@@ -127,6 +127,7 @@ Open a terminal and run::
     sudo apt-get update
     sudo apt-get dist-upgrade
     sudo apt-get install ros-groovy-desktop-full -y
+    sudo apt-get install ros-groovy-image-pipeline -y
 
 ###Create ROS Workspace and Install Repositories
 
@@ -139,9 +140,9 @@ Open a terminal and run::
     rosws set faa --git https://github.com/janelia-idf/fly-alcohol-assay.git
     rosws set faa_config --git https://github.com/janelia-idf/fly-alcohol-assay-config.git
     rosws update
-    python ~/ros/faa_ws/fly-alchol-assay-config/bash_setup.py
+    python ~/ros/faa_ws/faa-config/bash_setup.py
     source ~/.bashrc
-    python ~/ros/faa_ws/fly-alcohol-assay/install.py
+    python ~/ros/faa_ws/faa/install.py
 
 ###Install Extra ROS Pacakges (manually for now, automatically in the future)
 
