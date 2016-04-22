@@ -400,6 +400,11 @@ class WalkToEndAction(object):
         rospy.loginfo('Running WalkToEndAction')
         status_updater.set_status_image("Walk To End")
 
+        # turn on leds briefly to startle flies out of quiescence
+        turn_on_leds()
+        rospy.sleep(5)
+        turn_off_leds()
+
         rospy.loginfo('set_odor_valve_on({0},{1})'.format(olfactometerOdor0,vialDummy))
         set_odor_valve_on(olfactometerOdor0,vialDummy)
         rospy.loginfo('set_odor_valve_on({0},{1})'.format(olfactometerOdor1,vialDummy))

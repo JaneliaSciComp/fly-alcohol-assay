@@ -90,10 +90,10 @@ class TrackingDataProcessor(object):
                     indicies |= normalized_data['tunnel'] == tunnel
                 else:
                     indicies = normalized_data['tunnel'] == tunnel
-        indicies &= normalized_data['chamber'] != ''
-        indicies &= normalized_data['blob_ecc'] != '0.0'
-        filtered_data = normalized_data[indicies]
-        return filtered_data
+                    indicies &= normalized_data['chamber'] != ''
+                    indicies &= normalized_data['blob_ecc'] != '0.0'
+                    filtered_data = normalized_data[indicies]
+                    return filtered_data
 
     def get_raw_walkway_data(self,filtered_data):
         # walkway_dtype = numpy.dtype([('time_secs', '<u4'),
@@ -159,14 +159,14 @@ class TrackingDataProcessor(object):
         indicies &= tracking_chamber_data['time_rel'] > ethanol_start_time
         raw_chamber_data_air_after = tracking_chamber_data[indicies]
         raw_chamber_data_air_after = recfunctions.drop_fields(raw_chamber_data_air_after,
-                                                               'status',
-                                                               usemask=False)
+                                                              'status',
+                                                              usemask=False)
         status_array = numpy.array(['AirAfter']*len(raw_chamber_data_air_after),dtype='|S25')
         raw_chamber_data_air_after = recfunctions.append_fields(raw_chamber_data_air_after,
-                                                                 'status',
-                                                                 status_array,
-                                                                 dtypes='|S25',
-                                                                 usemask=False)
+                                                                'status',
+                                                                status_array,
+                                                                dtypes='|S25',
+                                                                usemask=False)
         raw_chamber_data = recfunctions.stack_arrays((raw_chamber_data,raw_chamber_data_air_after),usemask=False)
 
         return raw_chamber_data
@@ -187,9 +187,9 @@ class TrackingDataProcessor(object):
             if os.path.exists(data_path) and not self.overwrite:
                 print("Data file already exists!")
                 return
-        else:
-            return
-        print("Writing new data file")
+            else:
+                return
+                print("Writing new data file")
 
         data_file_name = file.replace(FILE_TOOLS.tracking_prefix,prefix)
         data_path = os.path.join(dir,data_file_name)
@@ -246,7 +246,7 @@ class TrackingDataProcessor(object):
             else:
                 analyzed_data = tunnel_data_analyzed
                 initialized = True
-        return analyzed_data
+                return analyzed_data
 
     def analyze_chamber_data(self,raw_chamber_data):
         ethanol_data = raw_chamber_data[raw_chamber_data['status']=='Ethanol']
@@ -275,10 +275,10 @@ class TrackingDataProcessor(object):
             analyzed_air_after_data = self.analyze_data(air_after_data)
             status_array = numpy.array(['AirAfter']*len(analyzed_air_after_data),dtype='|S25')
             analyzed_air_after_data = recfunctions.append_fields(analyzed_air_after_data,
-                                                                  'status',
-                                                                  status_array,
-                                                                  dtypes='|S25',
-                                                                  usemask=False)
+                                                                 'status',
+                                                                 status_array,
+                                                                 dtypes='|S25',
+                                                                 usemask=False)
             analyzed_chamber_data = recfunctions.stack_arrays((analyzed_chamber_data,analyzed_air_after_data),usemask=False)
 
         return analyzed_chamber_data

@@ -8,7 +8,7 @@
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>https://bitbucket.org/peterpolidoro/faa</url>
-  <depend package="camera_calibration"/>
+  <!-- <depend package="camera_calibration"/> -->
   <depend package="faa_status"/>
 
 </package>

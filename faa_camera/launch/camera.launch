@@ -14,8 +14,7 @@
   <!--   image_processing/image_width: 1280 -->
   <!--   image_processing/image_height: 960 -->
   <!-- </rosparam> -->
-  <node ns="camera" pkg="image_proc" type="image_proc"
-        name="image_proc" />
+  <node ns="camera" pkg="image_proc" type="image_proc" name="image_proc" />
   <node ns="camera" pkg="faa_camera" type="image_conditioner.py" name="faa_image_conditioner" />
   <!-- <node pkg="image_view" type="image_view" name="image_view" > -->
   <!--   <remap from="image" to="camera/image_raw" /> -->
