@@ -187,9 +187,6 @@ class TrackingDataProcessor(object):
             if os.path.exists(data_path) and not self.overwrite:
                 print("Data file already exists!")
                 return
-            else:
-                return
-                print("Writing new data file")
 
         data_file_name = file.replace(FILE_TOOLS.tracking_prefix,prefix)
         data_path = os.path.join(dir,data_file_name)
