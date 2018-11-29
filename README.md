@@ -1,4 +1,4 @@
-#fly-alcohol-assay
+# fly-alcohol-assay
 
 The code to control the Janelia fly alcohol assay (FlyBar).
 
@@ -6,7 +6,7 @@ Authors:
 Peter Polidoro polidorop@janelia.hhmi.org
 
 
-##Running
+## Running
 
 ###Experiment Mode (Typical Case)
 
@@ -17,13 +17,13 @@ Open a terminal and run::
 Then open a web browser and navigate to http://localhost:5000
 
 
-###Manual Mode for Adjusting Gates
+### Manual Mode for Adjusting Gates
 
 Open a terminal and run::
 
     faa -m
 
-###Help to Find More Command Line Options
+### Help to Find More Command Line Options
 
 Open a terminal and run::
 
@@ -31,9 +31,9 @@ Open a terminal and run::
 
 
 
-##Installation
+## Installation
 
-###Computer Hardware
+### Computer Hardware
 
 * ASUS BP6375-I73770039B No Screen Desktop PC Intel Core i7
   3770(3.40GHz) 8GB DDR3 1TB HDD Capacity Intel HD Graphics 4000
@@ -46,12 +46,12 @@ Open a terminal and run::
   State Drive (SSD)
   newegg item # N82E16820147187 (Quantity 2)
 
-###Computer Operating System
+### Computer Operating System
 
 xubuntu-12.04.3-desktop-amd64
 md5 hash: 8719cc129fcb766d728a7c101eb6cec4
 
-###Setup
+### Setup
 
 Open a terminal and run::
 
@@ -86,7 +86,7 @@ After the computer restarts, open a terminal and run::
     sudo chown -R fly:fly /media/data
     ln -s /media/data ~/faa_data
 
-###Setup for Remote Maintenance
+### Setup for Remote Maintenance
 
 On the machine you will use for remote maintenance, open a terminal
 and run::
@@ -103,7 +103,7 @@ On the remote computer open a terminal and run::
 Make sure PubkeyAuthentication is set to yes and
 PasswordAuthentication is set to no.
 
-###Test the Camera
+### Test the Camera
 
 Open a terminal and run::
 
@@ -111,14 +111,14 @@ Open a terminal and run::
     coriander
     # test to make sure camera works properly
 
-###Setup Permissions to Connect to Arduino Devices
+### Setup Permissions to Connect to Arduino Devices
 
 Open a terminal and run::
 
     sudo usermod -aG dialout $USER
     sudo shutdown -r now
 
-###Install ROS
+### Install ROS
 
 Open a terminal and run::
 
@@ -129,7 +129,7 @@ Open a terminal and run::
     sudo apt-get install ros-groovy-desktop-full -y
     sudo apt-get install ros-groovy-image-pipeline -y
 
-###Create ROS Workspace and Install Repositories
+### Create ROS Workspace and Install Repositories
 
 Open a terminal and run::
 
@@ -144,7 +144,7 @@ Open a terminal and run::
     source ~/.bashrc
     python ~/ros/faa_ws/faa/install.py
 
-###Install Extra ROS Pacakges (manually for now, automatically in the future)
+### Install Extra ROS Pacakges (manually for now, automatically in the future)
 
 Open a terminal and run::
 
@@ -153,28 +153,28 @@ Open a terminal and run::
     sudo apt-get install ros-groovy-rosbridge-suite -y
     sudo apt-get install ros-groovy-executive-smach-visualization -y
 
-###Install Support Python Packages into Virtualenv (manually for now, automatically in the future)
+### Install Support Python Packages into Virtualenv (manually for now, automatically in the future)
 
 Open a terminal and run::
 
     source $FAA_PYTHON_VIRTUALENV/bin/activate
     pip install flask --upgrade
 
-###Install Codecs for Creating and Viewing Videos
+### Install Codecs for Creating and Viewing Videos
 
 Open a terminal and run::
 
     sudo apt-get install libavcodec-extra-53 vlc
 
-##Setup
+## Setup
 
-###Comiple the ROS Packages
+### Comiple the ROS Packages
 
 Open a terminal and run::
 
     rosmake faa
 
-###Calibration
+### Calibration
 
 The path to the checkerboard pattern is:
 ~/ros/faa_ws/faa_config/patterns/checkerboard_10mm.svg
@@ -196,7 +196,7 @@ see the checkerboard. Wave checkerboard around under camera until
 'Commit'. Place IR filter back onto camera.
 
 
-##Software Update
+## Software Update
 
 Open a terminal and run::
 
